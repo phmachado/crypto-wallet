@@ -1,6 +1,6 @@
 import { Box, Grid, Paper, Typography } from "@mui/material";
 
-import loginBg from "../assets/login-bg.jpeg";
+import loginBg from "../../assets/login-bg.jpeg";
 
 type Props = {
   children: JSX.Element | JSX.Element[];
