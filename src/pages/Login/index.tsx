@@ -1,44 +1,46 @@
-import { Box, Button, Grid, TextField, Link } from "@mui/material";
+import { Button, Box, TextField, Link } from "@mui/material";
 
-import BeforeAppLayout from "../../components/BeforeAppLayout";
+import CredentialsLayout from "../../components/CredentialsLayout";
 
-export default function Login() {
+export default function Login(): JSX.Element {
   return (
-    <BeforeAppLayout>
-      <Box component="form" noValidate sx={{ mt: 2 }}>
-        <TextField
-          margin="dense"
-          required
-          fullWidth
-          id="email"
-          label="E-mail"
-          placeholder="Digite seu e-mail"
-          name="email"
-          autoComplete="email"
-          autoFocus
-        />
-        <TextField
-          margin="dense"
-          required
-          fullWidth
-          name="password"
-          label="Senha"
-          type="password"
-          placeholder="Digite sua senha"
-          id="password"
-          autoComplete="current-password"
-        />
-        <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Entrar
-        </Button>
-        <Grid container>
-          <Grid item>
-            <Link href="/cadastro" variant="body2">
-              Não tem cadastro? Cadastre-se
-            </Link>
-          </Grid>
-        </Grid>
+    <CredentialsLayout>
+      <TextField
+        margin="dense"
+        required
+        fullWidth
+        id="email"
+        label="E-mail"
+        type="email"
+        placeholder="Digite seu e-mail"
+        autoComplete="email"
+        autoFocus
+      />
+      <TextField
+        margin="dense"
+        required
+        fullWidth
+        id="password"
+        label="Senha"
+        type="password"
+        placeholder="Digite sua senha"
+        autoComplete="current-password"
+      />
+      <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+        Entrar
+      </Button>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "left",
+          justifyContent: "left",
+          width: "100%",
+        }}
+      >
+        <Link href="/cadastro" variant="body2">
+          Não tem cadastro? Cadastre-se
+        </Link>
       </Box>
-    </BeforeAppLayout>
+    </CredentialsLayout>
   );
 }
