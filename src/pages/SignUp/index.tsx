@@ -1,33 +1,48 @@
-import { Button, Box, TextField, Link } from "@mui/material";
+import { Button, TextField, Link, Box } from "@mui/material";
 
 import CredentialsLayout from "../../components/CredentialsLayout";
 
-export default function Login(): JSX.Element {
+export default function SignUp(): JSX.Element {
   return (
     <CredentialsLayout>
       <TextField
         margin="dense"
         required
         fullWidth
-        id="email"
-        label="E-mail"
-        type="email"
-        placeholder="Digite seu e-mail"
-        autoComplete="email"
+        id="name"
+        label="Nome"
+        placeholder="Digite seu nome"
         autoFocus
       />
       <TextField
         margin="dense"
         required
         fullWidth
+        type="email"
+        id="email"
+        label="E-mail"
+        placeholder="Digite seu e-mail"
+      />
+      <TextField
+        margin="dense"
+        required
+        fullWidth
+        type="password"
         id="password"
         label="Senha"
-        type="password"
         placeholder="Digite sua senha"
-        autoComplete="current-password"
+      />
+      <TextField
+        margin="dense"
+        required
+        fullWidth
+        type="password"
+        id="check-password"
+        label="Confirmar Senha"
+        placeholder="Digite sua senha novamente"
       />
       <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-        Entrar
+        Cadastrar
       </Button>
       <Box
         sx={{
@@ -37,8 +52,8 @@ export default function Login(): JSX.Element {
           width: "100%",
         }}
       >
-        <Link href="/cadastro" variant="body2">
-          Não tem cadastro? Cadastre-se
+        <Link href="/" variant="body2">
+          Já tem cadastro? Faça login
         </Link>
       </Box>
     </CredentialsLayout>
