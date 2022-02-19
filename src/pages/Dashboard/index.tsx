@@ -3,8 +3,7 @@ import { Container, Grid, Paper, Typography, Box } from "@mui/material";
 
 import AppLayout from "../../components/AppLayout";
 import Balance from "./components/Balance";
-import BritaToday from "./components/BritaToday";
-import BtcToday from "./components/BtcToday";
+import CurrencyToday from "./components/CurrencyToday";
 
 export default function Dashboard(): JSX.Element {
   return (
@@ -37,7 +36,11 @@ export default function Dashboard(): JSX.Element {
                 height: 250,
               }}
             >
-              <BtcToday />
+              <CurrencyToday
+                currency="Bitcoin"
+                value={206167.94}
+                lastUpdate={new Date().toISOString()}
+              />
             </Paper>
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
@@ -49,7 +52,11 @@ export default function Dashboard(): JSX.Element {
                 height: 250,
               }}
             >
-              <BritaToday />
+              <CurrencyToday
+                currency="Brita"
+                value={5.67}
+                lastUpdate={new Date().toISOString()}
+              />
             </Paper>
           </Grid>
         </Grid>
