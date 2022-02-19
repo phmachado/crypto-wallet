@@ -1,4 +1,7 @@
-import { SwapHorizOutlined } from "@mui/icons-material";
+import {
+  SwapHorizOutlined,
+  CurrencyExchangeOutlined,
+} from "@mui/icons-material";
 import {
   Container,
   Grid,
@@ -27,7 +30,9 @@ export default function Exchange(): JSX.Element {
     <AppLayout>
       <Container maxWidth="lg" sx={{ mb: 4 }}>
         <Box my={4}>
-          <Typography variant="h4">Trocar</Typography>
+          <Typography variant="h4">
+            <CurrencyExchangeOutlined /> Trocar
+          </Typography>
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12}>

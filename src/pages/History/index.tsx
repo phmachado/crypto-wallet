@@ -1,3 +1,4 @@
+import { HistoryOutlined } from "@mui/icons-material";
 import { Container, Grid, Paper, Typography, Box } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
@@ -62,7 +63,9 @@ export default function History(): JSX.Element {
     <AppLayout>
       <Container maxWidth="lg" sx={{ mb: 4 }}>
         <Box my={4}>
-          <Typography variant="h4">Extrato</Typography>
+          <Typography variant="h4">
+            <HistoryOutlined /> Extrato
+          </Typography>
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12}>

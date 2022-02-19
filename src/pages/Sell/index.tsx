@@ -1,3 +1,4 @@
+import { AttachMoneyOutlined } from "@mui/icons-material";
 import {
   Container,
   Grid,
@@ -32,7 +33,9 @@ export default function Sell(): JSX.Element {
     <AppLayout>
       <Container maxWidth="lg" sx={{ mb: 4 }}>
         <Box my={4}>
-          <Typography variant="h4">Vender</Typography>
+          <Typography variant="h4">
+            <AttachMoneyOutlined /> Vender
+          </Typography>
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12}>
