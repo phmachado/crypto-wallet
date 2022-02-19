@@ -5,6 +5,7 @@ import Exchange from "../pages/Exchange";
 import History from "../pages/History";
 import Login from "../pages/Login";
 import PageNotFound from "../pages/PageNotFound";
+import Profile from "../pages/Profile";
 import Sell from "../pages/Sell";
 import SignUp from "../pages/SignUp";
 
@@ -17,6 +18,7 @@ function AppRoutes() {
       <Route path="/vender" element={<Sell />} />
       <Route path="/trocar" element={<Exchange />} />
       <Route path="/extrato" element={<History />} />
+      <Route path="/perfil" element={<Profile />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
