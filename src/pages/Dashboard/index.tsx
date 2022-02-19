@@ -22,7 +22,7 @@ export default function Dashboard(): JSX.Element {
                 p: 2,
                 display: "flex",
                 flexDirection: "column",
-                height: 300,
+                height: 200,
               }}
             >
               <Balance />
@@ -34,7 +34,7 @@ export default function Dashboard(): JSX.Element {
                 p: 2,
                 display: "flex",
                 flexDirection: "column",
-                height: 300,
+                height: 250,
               }}
             >
               <BtcToday />
@@ -46,7 +46,7 @@ export default function Dashboard(): JSX.Element {
                 p: 2,
                 display: "flex",
                 flexDirection: "column",
-                height: 300,
+                height: 250,
               }}
             >
               <BritaToday />
