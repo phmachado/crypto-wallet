@@ -23,7 +23,7 @@ export default function Dashboard(): JSX.Element {
                 flexDirection: "column",
               }}
             >
-              <Balance />
+              <Balance balance={100000} />
             </Paper>
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
