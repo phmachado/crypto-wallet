@@ -1,8 +1,11 @@
 import { Button, Box, TextField, Link } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 import CredentialsLayout from "../../components/CredentialsLayout";
 
 export default function Login(): JSX.Element {
+  const navigate = useNavigate();
+
   return (
     <CredentialsLayout>
       <TextField
@@ -26,7 +29,12 @@ export default function Login(): JSX.Element {
         placeholder="Digite sua senha"
         autoComplete="current-password"
       />
-      <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+      <Button
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        onClick={() => navigate("/dashboard")}
+      >
         Entrar
       </Button>
       <Box
