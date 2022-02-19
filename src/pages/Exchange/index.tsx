@@ -68,7 +68,7 @@ export default function Exchange(): JSX.Element {
               <Box sx={{ marginBottom: 2 }}>
                 <Typography sx={{ fontWeight: "light" }} variant="subtitle2">
                   Você está trocando{" "}
-                  {isSwap ? "Brita por Bitcoin :)" : "Bitcoin por Brita :)"}
+                  {isSwap ? "Brita por Bitcoin" : "Bitcoin por Brita"}
                 </Typography>
               </Box>
               <TextField
