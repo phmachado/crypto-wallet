@@ -16,11 +16,11 @@ import React, { useState } from "react";
 
 import AppLayout from "../../components/AppLayout";
 
-export default function Buy(): JSX.Element {
+export default function Sell(): JSX.Element {
   const [crypto, setCrypto] = useState<string>("bitcoin");
   const [value, setValue] = useState<number>();
 
-  function handleBuy(): void {
+  function handleSell(): void {
     console.log(crypto);
     console.log(value);
   }
@@ -33,7 +33,7 @@ export default function Buy(): JSX.Element {
     <AppLayout>
       <Container maxWidth="lg" sx={{ mb: 4 }}>
         <Box my={4}>
-          <Typography variant="h4">Comprar</Typography>
+          <Typography variant="h4">Vender</Typography>
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12}>
@@ -84,9 +84,9 @@ export default function Buy(): JSX.Element {
                 disabled={crypto === "" || !value}
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                onClick={() => handleBuy()}
+                onClick={() => handleSell()}
               >
-                Comprar
+                Vender
               </Button>
             </Paper>
           </Grid>
