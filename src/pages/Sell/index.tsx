@@ -81,7 +81,7 @@ export default function Sell(): JSX.Element {
                 onChange={(e) => setValue(Number(e.target.value))}
               />
               <Button
-                disabled={crypto === "" || !value}
+                disabled={!value}
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 onClick={() => handleSell()}
