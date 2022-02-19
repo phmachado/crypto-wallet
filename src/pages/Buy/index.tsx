@@ -6,11 +6,29 @@ import {
   Box,
   TextField,
   Button,
+  FormControl,
+  FormLabel,
+  FormControlLabel,
+  RadioGroup,
+  Radio,
 } from "@mui/material";
+import React, { useState } from "react";
 
 import AppLayout from "../../components/AppLayout";
 
 export default function Buy(): JSX.Element {
+  const [crypto, setCrypto] = useState<string>("bitcoin");
+  const [value, setValue] = useState<number>();
+
+  function handleBuy(): void {
+    console.log(crypto);
+    console.log(value);
+  }
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCrypto((event.target as HTMLInputElement).value);
+  };
+
   return (
     <AppLayout>
       <Container maxWidth="lg" sx={{ mb: 4 }}>
@@ -21,20 +39,53 @@ export default function Buy(): JSX.Element {
           <Grid item xs={12}>
             <Paper
               sx={{
-                p: 10,
+                px: 30,
+                py: 10,
                 display: "flex",
                 flexDirection: "column",
               }}
             >
+              <FormControl sx={{ marginBottom: 1 }}>
+                <FormLabel id="demo-controlled-radio-buttons-group">
+                  Criptomoeda
+                </FormLabel>
+                <RadioGroup
+                  aria-labelledby="demo-controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={crypto}
+                  onChange={handleChange}
+                >
+                  <FormControlLabel
+                    value="bitcoin"
+                    control={<Radio />}
+                    label="Bitcoin"
+                  />
+                  <FormControlLabel
+                    value="brita"
+                    control={<Radio />}
+                    label="Brita"
+                  />
+                </RadioGroup>
+              </FormControl>
               <TextField
                 margin="dense"
                 required
                 fullWidth
-                id="name"
+                id="valor"
+                type="number"
+                InputLabelProps={{
+                  shrink: true,
+                }}
                 label="Valor"
                 placeholder="Digite o valor"
+                onChange={(e) => setValue(Number(e.target.value))}
               />
-              <Button variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button
+                disabled={crypto === "" || !value}
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={() => handleBuy()}
+              >
                 Comprar
               </Button>
             </Paper>
