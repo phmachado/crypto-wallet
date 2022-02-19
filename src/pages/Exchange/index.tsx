@@ -39,8 +39,13 @@ export default function Exchange(): JSX.Element {
                 flexDirection: "column",
               }}
             >
+              <Typography sx={{ marginBottom: 1 }} variant="h6">
+                Selecione o tipo de troca que deseja realizar:
+              </Typography>
               <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Typography variant="h4">{crypto[0]}</Typography>
+                <Typography sx={{ fontWeight: "light" }} variant="h4">
+                  {crypto[0]}
+                </Typography>
                 <IconButton
                   onClick={() => {
                     setIsSwap(!isSwap);
@@ -51,10 +56,12 @@ export default function Exchange(): JSX.Element {
                 >
                   <SwapHorizOutlined />
                 </IconButton>
-                <Typography variant="h4">{crypto[1]}</Typography>
+                <Typography sx={{ fontWeight: "light" }} variant="h4">
+                  {crypto[1]}
+                </Typography>
               </Box>
               <Box sx={{ marginBottom: 2 }}>
-                <Typography variant="subtitle2">
+                <Typography sx={{ fontWeight: "light" }} variant="subtitle2">
                   Você está trocando{" "}
                   {isSwap ? "Brita por Bitcoin :)" : "Bitcoin por Brita :)"}
                 </Typography>

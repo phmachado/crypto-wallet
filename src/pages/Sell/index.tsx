@@ -7,7 +7,6 @@ import {
   TextField,
   Button,
   FormControl,
-  FormLabel,
   FormControlLabel,
   RadioGroup,
   Radio,
@@ -45,25 +44,20 @@ export default function Sell(): JSX.Element {
                 flexDirection: "column",
               }}
             >
-              <FormControl sx={{ marginBottom: 1 }}>
-                <FormLabel id="demo-controlled-radio-buttons-group">
-                  Criptomoeda
-                </FormLabel>
-                <RadioGroup
-                  aria-labelledby="demo-controlled-radio-buttons-group"
-                  name="controlled-radio-buttons-group"
-                  value={crypto}
-                  onChange={handleChange}
-                >
+              <Typography sx={{ marginBottom: 1 }} variant="h6">
+                Selecione a criptomoeda que deseja vender:
+              </Typography>
+              <FormControl sx={{ marginBottom: 2 }}>
+                <RadioGroup value={crypto} onChange={handleChange}>
                   <FormControlLabel
                     value="bitcoin"
-                    control={<Radio />}
                     label="Bitcoin"
+                    control={<Radio />}
                   />
                   <FormControlLabel
                     value="brita"
-                    control={<Radio />}
                     label="Brita"
+                    control={<Radio />}
                   />
                 </RadioGroup>
               </FormControl>
