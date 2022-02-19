@@ -21,7 +21,6 @@ export default function Dashboard(): JSX.Element {
                 p: 2,
                 display: "flex",
                 flexDirection: "column",
-                height: 200,
               }}
             >
               <Balance />
@@ -33,7 +32,6 @@ export default function Dashboard(): JSX.Element {
                 p: 2,
                 display: "flex",
                 flexDirection: "column",
-                height: 250,
               }}
             >
               <CurrencyToday
@@ -49,7 +47,6 @@ export default function Dashboard(): JSX.Element {
                 p: 2,
                 display: "flex",
                 flexDirection: "column",
-                height: 250,
               }}
             >
               <CurrencyToday
