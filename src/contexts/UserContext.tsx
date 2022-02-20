@@ -18,7 +18,6 @@ export const UserContext = createContext(initialValue as UserContextType);
 
 export function UserContextProvider({ children }: Props) {
   const [currentUser, setCurrentUser] = useState<IUser>();
-  console.log(currentUser);
 
   return (
     <UserContext.Provider

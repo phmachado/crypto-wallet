@@ -3,11 +3,14 @@ import axios from "axios";
 import { format, subDays, isSaturday, isSunday } from "date-fns";
 import { createContext, ReactNode, useState, useEffect } from "react";
 
+import { db } from "../db";
+
 type Props = {
   children: ReactNode;
 };
 
 type DashboardContextType = {
+  balance: number | undefined;
   btc: string | undefined;
   btcLastUpdate: number | undefined;
   brita: number | undefined;
@@ -23,10 +26,25 @@ export const DashboardContext = createContext(
 );
 
 export function DashboardContextProvider({ children }: Props) {
+  const [balance, setBalance] = useState<number>();
   const [btc, setBtc] = useState<string>();
   const [btcLastUpdate, setBtcLastUpdate] = useState<number>();
   const [brita, setBrita] = useState<number>();
   const [britaLastUpdate, setBritaLastUpdate] = useState<string>();
+
+  async function getBalance() {
+    try {
+      const currentUserEmail = localStorage.getItem("currentUser");
+      const user = await db.user.where({ email: currentUserEmail }).toArray();
+      setBalance(user[0].balance);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    getBalance();
+  }, []);
 
   let queryDate = "";
   if (isSaturday(new Date())) {
@@ -71,6 +89,7 @@ export function DashboardContextProvider({ children }: Props) {
   return (
     <DashboardContext.Provider
       value={{
+        balance,
         btc,
         btcLastUpdate,
         brita,

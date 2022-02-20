@@ -7,10 +7,8 @@ import { DashboardContext } from "../../contexts/DashboardContext";
 import Balance from "./components/Balance";
 import CurrencyToday from "./components/CurrencyToday";
 
-const balance = 100000;
-
 export default function Dashboard(): JSX.Element {
-  const { btc, btcLastUpdate, brita, britaLastUpdate, realToBrita, realToBtc } =
+  const { btc, btcLastUpdate, brita, britaLastUpdate, balance } =
     useContext(DashboardContext);
 
   return (
@@ -30,11 +28,7 @@ export default function Dashboard(): JSX.Element {
                 flexDirection: "column",
               }}
             >
-              <Balance
-                real={balance}
-                btc={realToBtc(balance)}
-                brita={realToBrita(balance)}
-              />
+              <Balance value={balance} />
             </Paper>
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
