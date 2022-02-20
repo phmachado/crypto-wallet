@@ -33,6 +33,7 @@ export default function SignUp(): JSX.Element {
             .toArray();
           if (createdUser.length !== 0) {
             setCurrentUser(createdUser[0]);
+            localStorage.setItem("currentUser", createdUser[0].email);
             navigate("/dashboard");
           }
         }

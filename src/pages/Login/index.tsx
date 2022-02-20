@@ -18,6 +18,7 @@ export default function Login(): JSX.Element {
       const userExists = await db.user.where({ email, password }).toArray();
       if (userExists.length !== 0) {
         setCurrentUser(userExists[0]);
+        localStorage.setItem("currentUser", userExists[0].email);
         navigate("/dashboard");
       } else {
         console.log("INCORRECT_OR_DONT_EXIST");
