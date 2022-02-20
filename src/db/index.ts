@@ -1,6 +1,6 @@
 import Dexie, { Table } from "dexie";
 
-interface IUser {
+export interface IUser {
   id?: number;
   email: string;
   name: string;

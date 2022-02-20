@@ -3,6 +3,7 @@ import { grey } from "@mui/material/colors";
 import { BrowserRouter } from "react-router-dom";
 
 import { DashboardContextProvider } from "./contexts/DashboardContext";
+import { UserContextProvider } from "./contexts/UserContext";
 import AppRoutes from "./routes";
 
 const theme = createTheme({
@@ -18,9 +19,11 @@ function App(): JSX.Element {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <DashboardContextProvider>
-          <AppRoutes />
-        </DashboardContextProvider>
+        <UserContextProvider>
+          <DashboardContextProvider>
+            <AppRoutes />
+          </DashboardContextProvider>
+        </UserContextProvider>
       </BrowserRouter>
     </ThemeProvider>
   );
