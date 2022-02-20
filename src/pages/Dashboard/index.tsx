@@ -8,15 +8,23 @@ import AppLayout from "../../components/AppLayout";
 import Balance from "./components/Balance";
 import CurrencyToday from "./components/CurrencyToday";
 
+const balance = 100000;
+
 export default function Dashboard(): JSX.Element {
   const [btc, setBtc] = useState<string>();
   const [btcLastUpdate, setBtcLastUpdate] = useState<number>();
   const [brita, setBrita] = useState<number>();
   const [britaLastUpdate, setBritaLastUpdate] = useState<string>();
-  const queryDate =
-    isSaturday(new Date()) || isSunday(new Date())
-      ? format(subDays(new Date(), 1), "MM-dd-yyyy")
-      : format(new Date(), "MM-dd-yyyy");
+
+  let queryDate = "";
+  if (isSaturday(new Date())) {
+    queryDate = format(subDays(new Date(), 1), "MM-dd-yyyy");
+  }
+  if (isSunday(new Date())) {
+    queryDate = format(subDays(new Date(), 2), "MM-dd-yyyy");
+  } else {
+    queryDate = format(new Date(), "MM-dd-yyyy");
+  }
 
   useEffect(() => {
     async function getBtc() {
@@ -41,6 +49,13 @@ export default function Dashboard(): JSX.Element {
     getBrita();
   }, []);
 
+  function realToBtc(real: number): number {
+    return real / Number(btc);
+  }
+  function realToBrita(real: number): number {
+    return real / Number(brita);
+  }
+
   return (
     <AppLayout>
       <Container maxWidth="lg" sx={{ mb: 4 }}>
@@ -58,7 +73,11 @@ export default function Dashboard(): JSX.Element {
                 flexDirection: "column",
               }}
             >
-              <Balance balance={100000} />
+              <Balance
+                real={balance}
+                btc={realToBtc(balance)}
+                brita={realToBrita(balance)}
+              />
             </Paper>
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
