@@ -1,8 +1,38 @@
 import { Button, TextField, Link, Box } from "@mui/material";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import CredentialsLayout from "../../components/CredentialsLayout";
+import { db } from "../../db";
 
 export default function SignUp(): JSX.Element {
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [checkPassword, setCheckPassword] = useState<string>("");
+  const navigate = useNavigate();
+
+  async function handleSignUp() {
+    try {
+      if (password !== checkPassword) {
+        console.log("PASSWORD_DONT_MATCH");
+      } else {
+        const newUser = await db.user.add({
+          name,
+          email,
+          password,
+          balance: 100000,
+          history: [],
+        });
+        if (newUser) {
+          navigate("/dashboard");
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <CredentialsLayout>
       <TextField
@@ -13,6 +43,7 @@ export default function SignUp(): JSX.Element {
         label="Nome"
         placeholder="Digite seu nome"
         autoFocus
+        onChange={(e) => setName(e.target.value)}
       />
       <TextField
         margin="dense"
@@ -22,6 +53,7 @@ export default function SignUp(): JSX.Element {
         id="email"
         label="E-mail"
         placeholder="Digite seu e-mail"
+        onChange={(e) => setEmail(e.target.value)}
       />
       <TextField
         margin="dense"
@@ -31,6 +63,7 @@ export default function SignUp(): JSX.Element {
         id="password"
         label="Senha"
         placeholder="Digite sua senha"
+        onChange={(e) => setPassword(e.target.value)}
       />
       <TextField
         margin="dense"
@@ -40,8 +73,17 @@ export default function SignUp(): JSX.Element {
         id="check-password"
         label="Confirmar Senha"
         placeholder="Digite sua senha novamente"
+        onChange={(e) => setCheckPassword(e.target.value)}
       />
-      <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+      <Button
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        onClick={() => handleSignUp()}
+        disabled={
+          name === "" || email === "" || password === "" || checkPassword === ""
+        }
+      >
         Cadastrar
       </Button>
       <Box
