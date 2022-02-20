@@ -1,11 +1,18 @@
 import { DashboardOutlined } from "@mui/icons-material";
 import { Container, Grid, Paper, Typography, Box } from "@mui/material";
+import { useContext } from "react";
 
 import AppLayout from "../../components/AppLayout";
+import { DashboardContext } from "../../contexts/DashboardContext";
 import Balance from "./components/Balance";
 import CurrencyToday from "./components/CurrencyToday";
 
+const balance = 100000;
+
 export default function Dashboard(): JSX.Element {
+  const { btc, btcLastUpdate, brita, britaLastUpdate, realToBrita, realToBtc } =
+    useContext(DashboardContext);
+
   return (
     <AppLayout>
       <Container maxWidth="lg" sx={{ mb: 4 }}>
@@ -23,7 +30,11 @@ export default function Dashboard(): JSX.Element {
                 flexDirection: "column",
               }}
             >
-              <Balance balance={100000} />
+              <Balance
+                real={balance}
+                btc={realToBtc(balance)}
+                brita={realToBrita(balance)}
+              />
             </Paper>
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
@@ -36,8 +47,8 @@ export default function Dashboard(): JSX.Element {
             >
               <CurrencyToday
                 currency="Bitcoin"
-                value={206167.94}
-                lastUpdate={new Date().toISOString()}
+                value={btc}
+                lastUpdate={btcLastUpdate}
               />
             </Paper>
           </Grid>
@@ -51,8 +62,8 @@ export default function Dashboard(): JSX.Element {
             >
               <CurrencyToday
                 currency="Brita"
-                value={5.67}
-                lastUpdate={new Date().toISOString()}
+                value={brita}
+                lastUpdate={britaLastUpdate}
               />
             </Paper>
           </Grid>
