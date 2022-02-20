@@ -1,11 +1,14 @@
 import { Button, TextField, Link, Box } from "@mui/material";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import CredentialsLayout from "../../components/CredentialsLayout";
+import { UserContext } from "../../contexts/UserContext";
 import { db } from "../../db";
 
 export default function SignUp(): JSX.Element {
+  const { setCurrentUser } = useContext(UserContext);
+
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -25,7 +28,13 @@ export default function SignUp(): JSX.Element {
           history: [],
         });
         if (newUser) {
-          navigate("/dashboard");
+          const createdUser = await db.user
+            .where({ email, password })
+            .toArray();
+          if (createdUser.length !== 0) {
+            setCurrentUser(createdUser[0]);
+            navigate("/dashboard");
+          }
         }
       }
     } catch (err) {

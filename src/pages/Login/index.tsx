@@ -1,11 +1,14 @@
 import { Button, Box, TextField, Link } from "@mui/material";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import CredentialsLayout from "../../components/CredentialsLayout";
+import { UserContext } from "../../contexts/UserContext";
 import { db } from "../../db";
 
 export default function Login(): JSX.Element {
+  const { setCurrentUser } = useContext(UserContext);
+
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -14,6 +17,7 @@ export default function Login(): JSX.Element {
     try {
       const userExists = await db.user.where({ email, password }).toArray();
       if (userExists.length !== 0) {
+        setCurrentUser(userExists[0]);
         navigate("/dashboard");
       } else {
         console.log("INCORRECT_OR_DONT_EXIST");
