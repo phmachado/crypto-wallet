@@ -12,17 +12,64 @@ import {
   RadioGroup,
   Radio,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 import AppLayout from "../../components/AppLayout";
+import { DashboardContext } from "../../contexts/DashboardContext";
+import { UserContext } from "../../contexts/UserContext";
+import { db } from "../../db";
 
 export default function Sell(): JSX.Element {
+  const { btc, brita, realToBtc, realToBrita, setBalance } =
+    useContext(DashboardContext);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
+
   const [crypto, setCrypto] = useState<string>("bitcoin");
   const [value, setValue] = useState<number>();
 
+  function btcToReal(value: number) {
+    return value * Number(btc);
+  }
+
+  function britaToReal(value: number) {
+    return value * Number(brita);
+  }
+
+  async function updateBalance(newBalance: number) {
+    try {
+      if (currentUser) {
+        const updateRes = await db.user.update(Number(currentUser.id), {
+          balance: newBalance,
+          history: [
+            ...currentUser.history,
+            { date: new Date(), operation: `sell-${crypto}`, value },
+          ],
+        });
+        if (updateRes) {
+          const currentUserEmail = localStorage.getItem("currentUser");
+          const user = await db.user
+            .where({ email: currentUserEmail })
+            .toArray();
+          setCurrentUser(user[0]);
+          setBalance(user[0].balance);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   function handleSell(): void {
-    console.log(crypto);
-    console.log(value);
+    if (currentUser && value) {
+      const newBalance =
+        currentUser.balance -
+        (crypto === "bitcoin" ? btcToReal(value) : britaToReal(value));
+      if (newBalance < 0) {
+        console.log("PROVIDE_VALID_VALUE");
+      } else {
+        updateBalance(newBalance);
+      }
+    }
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +124,30 @@ export default function Sell(): JSX.Element {
                 placeholder="Digite o valor"
                 onChange={(e) => setValue(Number(e.target.value))}
               />
+              <Typography variant="caption" sx={{ p: 1 }}>
+                {crypto === "bitcoin" ? (
+                  <>
+                    Seu saldo em Bitcoin é de{" "}
+                    {currentUser
+                      ? realToBtc(currentUser.balance).toFixed(8)
+                      : "Carregando"}{" "}
+                    BTC
+                  </>
+                ) : (
+                  <>
+                    Seu saldo em Brita é de B${" "}
+                    {currentUser
+                      ? realToBrita(currentUser.balance).toLocaleString(
+                          "pt-BR",
+                          {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }
+                        )
+                      : "Carregando"}{" "}
+                  </>
+                )}
+              </Typography>
               <Button
                 disabled={!value}
                 variant="contained"

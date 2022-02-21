@@ -11,7 +11,10 @@ type Props = {
 
 type DashboardContextType = {
   balance: number | undefined;
-  btc: string | undefined;
+  setBalance: (balance: number) => void;
+  setBtc: (btc: string | number) => void;
+  setBrita: (brita: number) => void;
+  btc: string | number | undefined;
   btcLastUpdate: number | undefined;
   brita: number | undefined;
   britaLastUpdate: string | undefined;
@@ -27,7 +30,7 @@ export const DashboardContext = createContext(
 
 export function DashboardContextProvider({ children }: Props) {
   const [balance, setBalance] = useState<number>();
-  const [btc, setBtc] = useState<string>();
+  const [btc, setBtc] = useState<string | number>();
   const [btcLastUpdate, setBtcLastUpdate] = useState<number>();
   const [brita, setBrita] = useState<number>();
   const [britaLastUpdate, setBritaLastUpdate] = useState<string>();
@@ -90,6 +93,9 @@ export function DashboardContextProvider({ children }: Props) {
     <DashboardContext.Provider
       value={{
         balance,
+        setBalance,
+        setBrita,
+        setBtc,
         btc,
         btcLastUpdate,
         brita,
