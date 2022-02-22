@@ -5,7 +5,9 @@ export interface IUser {
   email: string;
   name: string;
   password: string;
-  balance: number;
+  real: number;
+  btc: number;
+  brita: number;
   history: { date: string; operation: string; value: number }[] | [];
 }
 
@@ -15,7 +17,7 @@ export class AppDB extends Dexie {
   constructor() {
     super("AppDB");
     this.version(1).stores({
-      user: "++id,email,name,password,balance,history",
+      user: "++id,email,name,password,real,btc,brita,history",
     });
   }
 }
