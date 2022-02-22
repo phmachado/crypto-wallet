@@ -39,21 +39,28 @@ export default function LayoutAppBar() {
             <ListItemText primary="Dashboard" />
           </ListItem>
 
-          <ListItem button key="2" onClick={() => navigate("/vender")}>
+          <ListItem button key="2" onClick={() => navigate("/comprar")}>
+            <ListItemIcon>
+              <AttachMoneyOutlined />
+            </ListItemIcon>
+            <ListItemText primary="Comprar" />
+          </ListItem>
+
+          <ListItem button key="3" onClick={() => navigate("/vender")}>
             <ListItemIcon>
               <AttachMoneyOutlined />
             </ListItemIcon>
             <ListItemText primary="Vender" />
           </ListItem>
 
-          <ListItem button key="3" onClick={() => navigate("/trocar")}>
+          <ListItem button key="4" onClick={() => navigate("/trocar")}>
             <ListItemIcon>
               <CurrencyExchangeOutlined />
             </ListItemIcon>
             <ListItemText primary="Trocar" />
           </ListItem>
 
-          <ListItem button key="4" onClick={() => navigate("/extrato")}>
+          <ListItem button key="5" onClick={() => navigate("/extrato")}>
             <ListItemIcon>
               <HistoryOutlined />
             </ListItemIcon>
