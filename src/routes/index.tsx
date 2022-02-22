@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
+import Buy from "../pages/Buy";
 import Dashboard from "../pages/Dashboard";
 import Exchange from "../pages/Exchange";
 import History from "../pages/History";
@@ -16,6 +17,7 @@ function AppRoutes() {
       <Route path="/cadastro" element={<SignUp />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/vender" element={<Sell />} />
+      <Route path="/comprar" element={<Buy />} />
       <Route path="/trocar" element={<Exchange />} />
       <Route path="/extrato" element={<History />} />
       <Route path="/perfil" element={<Profile />} />
