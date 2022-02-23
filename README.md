@@ -34,5 +34,5 @@ Com Yarn:
 yarn start
 ```
 
-## License
+## Licença
 [MIT](https://choosealicense.com/licenses/mit/)
