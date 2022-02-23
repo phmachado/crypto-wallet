@@ -1,4 +1,4 @@
-import { AttachMoneyOutlined } from "@mui/icons-material";
+import { PaidOutlined } from "@mui/icons-material";
 import {
   Container,
   Grid,
@@ -122,7 +122,7 @@ export default function Sell(): JSX.Element {
       <Container maxWidth="lg" sx={{ mb: 4 }}>
         <Box my={4}>
           <Typography variant="h4">
-            <AttachMoneyOutlined /> Vender
+            <PaidOutlined /> Vender
           </Typography>
         </Box>
         <Grid container spacing={3}>
@@ -136,7 +136,7 @@ export default function Sell(): JSX.Element {
               }}
             >
               <Typography sx={{ marginBottom: 1 }} variant="h6">
-                Selecione a criptomoeda que deseja vender:
+                Qual crypto deseja vender?
               </Typography>
               <FormControl sx={{ marginBottom: 2 }}>
                 <RadioGroup

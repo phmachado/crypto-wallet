@@ -1,8 +1,8 @@
 import {
   DashboardOutlined,
   CurrencyExchangeOutlined,
-  AttachMoneyOutlined,
   HistoryOutlined,
+  PaidOutlined,
 } from "@mui/icons-material";
 import {
   Toolbar,
@@ -41,14 +41,14 @@ export default function LayoutAppBar() {
 
           <ListItem button key="2" onClick={() => navigate("/comprar")}>
             <ListItemIcon>
-              <AttachMoneyOutlined />
+              <PaidOutlined />
             </ListItemIcon>
             <ListItemText primary="Comprar" />
           </ListItem>
 
           <ListItem button key="3" onClick={() => navigate("/vender")}>
             <ListItemIcon>
-              <AttachMoneyOutlined />
+              <PaidOutlined />
             </ListItemIcon>
             <ListItemText primary="Vender" />
           </ListItem>

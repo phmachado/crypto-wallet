@@ -157,7 +157,7 @@ export default function Exchange(): JSX.Element {
               }}
             >
               <Typography sx={{ marginBottom: 1 }} variant="h6">
-                Selecione o tipo de troca que deseja realizar:
+                Qual troca deseja realizar?
               </Typography>
               <Box sx={{ display: "flex", flexDirection: "row" }}>
                 <Typography sx={{ fontWeight: "light" }} variant="h4">
