@@ -12,23 +12,72 @@ import {
   RadioGroup,
   Radio,
 } from "@mui/material";
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 
 import AppLayout from "../../components/AppLayout";
+import { CurrentCryptoContext } from "../../contexts/CurrentCryptoContext";
 import { UserContext } from "../../contexts/UserContext";
+import { db } from "../../db";
+import { btcToReal, britaToReal } from "../../utils";
 
 export default function Buy(): JSX.Element {
-  const { currentUser, setCurrentUser, updateCurrentUser } =
-    useContext(UserContext);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
+  const { currentBtc, currentBrita } = useContext(CurrentCryptoContext);
 
   const [crypto, setCrypto] = useState<string>("bitcoin");
   const [value, setValue] = useState<number>();
 
   async function handleBuyBtc() {
     if (currentUser && currentUser.id) {
-      const { id, btc, real } = currentUser;
-      const newReal = real;
-      updateCurrentUser(id, { btc: value });
+      const currentRealBalance = currentUser.real;
+      const currentBtcBalance = currentUser.btc;
+      const currentBritaBalance = currentUser.brita;
+
+      if (crypto === "bitcoin" && currentBtc && value) {
+        const purchaseAmount = btcToReal(value, currentBtc);
+
+        if (purchaseAmount > currentRealBalance) {
+          console.log("INVALID_OPERATION");
+        } else {
+          const newRealBalance = currentRealBalance - purchaseAmount;
+          const updateRes = await db.user.update(currentUser.id, {
+            real: newRealBalance,
+            btc: currentBtcBalance + value,
+          });
+          if (updateRes) {
+            const userExists = await db.user
+              .where({ email: currentUser.email })
+              .toArray();
+            if (userExists.length) {
+              setCurrentUser(userExists[0]);
+            }
+          }
+          console.log("PURCHASE_SUCESSFUL");
+        }
+      }
+
+      if (crypto === "brita" && currentBrita && value) {
+        const purchaseAmount = britaToReal(value, currentBrita);
+
+        if (purchaseAmount > currentRealBalance) {
+          console.log("INVALID_OPERATION");
+        } else {
+          const newRealBalance = currentRealBalance - purchaseAmount;
+          const updateRes = await db.user.update(currentUser.id, {
+            real: newRealBalance,
+            brita: currentBritaBalance + value,
+          });
+          if (updateRes) {
+            const userExists = await db.user
+              .where({ email: currentUser.email })
+              .toArray();
+            if (userExists.length) {
+              setCurrentUser(userExists[0]);
+            }
+          }
+          console.log("PURCHASE_SUCESSFUL");
+        }
+      }
     }
   }
 
