@@ -4,12 +4,14 @@ import { useContext } from "react";
 
 import AppLayout from "../../components/AppLayout";
 import { CurrentCryptoContext } from "../../contexts/CurrentCryptoContext";
+import { UserContext } from "../../contexts/UserContext";
 import Balance from "./components/Balance";
 import CurrencyToday from "./components/CurrencyToday";
 
 export default function Dashboard(): JSX.Element {
   const { currentBtc, btcLastUpdate, currentBrita, britaLastUpdate } =
     useContext(CurrentCryptoContext);
+  const { currentUser } = useContext(UserContext);
 
   return (
     <AppLayout>
@@ -28,7 +30,15 @@ export default function Dashboard(): JSX.Element {
                 flexDirection: "column",
               }}
             >
-              <Balance value={balance} />
+              {currentUser ? (
+                <Balance
+                  real={currentUser.real}
+                  btc={currentUser.btc}
+                  brita={currentUser.brita}
+                />
+              ) : (
+                "Carregando..."
+              )}
             </Paper>
           </Grid>
           <Grid item xs={12} md={6} lg={6}>

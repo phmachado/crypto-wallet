@@ -1,17 +1,16 @@
 import { AccountBalanceWalletOutlined } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import { format } from "date-fns";
-import { useContext } from "react";
 
-import { DashboardContext } from "../../../../contexts/DashboardContext";
+import { formatReal, formatBtc, formatBrita } from "../../../../utils";
 
 type Props = {
-  value: number | undefined;
+  real: number;
+  btc: number;
+  brita: number;
 };
 
-export default function Balance({ value }: Props) {
-  const { realToBrita, realToBtc } = useContext(DashboardContext);
-
+export default function Balance({ real, btc, brita }: Props) {
   return (
     <Box sx={{ p: 4, display: "flex", flexDirection: "column" }}>
       <Typography variant="h4">
@@ -22,35 +21,13 @@ export default function Balance({ value }: Props) {
       </Typography>
       <Box sx={{ px: 4, paddingTop: 2 }}>
         <Typography sx={{ marginBottom: 1 }} variant="h6">
-          Real:{" "}
-          {value ? (
-            <>
-              {value.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}
-            </>
-          ) : (
-            "Carregando..."
-          )}
+          Real: {formatReal(real)}
         </Typography>
         <Typography sx={{ marginBottom: 1 }} variant="h6">
-          Bitcoin:{" "}
-          {value ? <>{realToBtc(value).toFixed(8)} BTC</> : "Carregando..."}
+          Bitcoin: {formatBtc(btc)} BTC
         </Typography>
         <Typography sx={{ marginBottom: 1 }} variant="h6">
-          Brita:{" "}
-          {value ? (
-            <>
-              B${" "}
-              {realToBrita(value).toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </>
-          ) : (
-            "Carregando..."
-          )}
+          Brita: B$ {formatBrita(brita)}
         </Typography>
       </Box>
     </Box>
