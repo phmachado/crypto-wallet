@@ -49,11 +49,15 @@ export default function Dashboard(): JSX.Element {
                 flexDirection: "column",
               }}
             >
-              <CurrencyToday
-                currency="Bitcoin"
-                value={currentBtc}
-                lastUpdate={btcLastUpdate}
-              />
+              {currentBtc && btcLastUpdate ? (
+                <CurrencyToday
+                  currency="Bitcoin"
+                  value={currentBtc}
+                  lastUpdate={btcLastUpdate}
+                />
+              ) : (
+                "Carregando..."
+              )}
             </Paper>
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
@@ -64,11 +68,15 @@ export default function Dashboard(): JSX.Element {
                 flexDirection: "column",
               }}
             >
-              <CurrencyToday
-                currency="Brita"
-                value={currentBrita}
-                lastUpdate={britaLastUpdate}
-              />
+              {currentBrita && britaLastUpdate ? (
+                <CurrencyToday
+                  currency="Brita"
+                  value={currentBrita}
+                  lastUpdate={britaLastUpdate}
+                />
+              ) : (
+                "Carregando..."
+              )}
             </Paper>
           </Grid>
         </Grid>
