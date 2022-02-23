@@ -33,7 +33,7 @@ export default function SignUp(): JSX.Element {
           const createdUser = await db.user
             .where({ email, password })
             .toArray();
-          if (createdUser.length !== 0) {
+          if (createdUser.length) {
             setCurrentUser(createdUser[0]);
             localStorage.setItem("currentUser", createdUser[0].email);
             navigate("/dashboard");

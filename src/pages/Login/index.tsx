@@ -16,7 +16,7 @@ export default function Login(): JSX.Element {
   async function handleLogin() {
     try {
       const userExists = await db.user.where({ email, password }).toArray();
-      if (userExists.length !== 0) {
+      if (userExists.length) {
         setCurrentUser(userExists[0]);
         localStorage.setItem("currentUser", userExists[0].email);
         navigate("/dashboard");
