@@ -2,13 +2,14 @@ import { Button, Box, TextField } from "@mui/material";
 import CryptoJS from "crypto-js";
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import CredentialsLayout from "../../components/CredentialsLayout";
 import { UserContext } from "../../contexts/UserContext";
 import { db } from "../../db";
 
 export default function Login(): JSX.Element {
-  const { setCurrentUser } = useContext(UserContext);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
 
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
@@ -38,14 +39,18 @@ export default function Login(): JSX.Element {
             localStorage.setItem("dummyToken", "grant-access");
           }
           navigate("/dashboard");
+          if (currentUser) {
+            toast.success(`Bem-vindo, ${currentUser.name}!`);
+          }
         } else {
-          console.log("INCORRECT_PASSWORD_OR_EMAIL");
+          toast.warning("E-mail ou senha incorretos.");
         }
       } else {
-        console.log("INCORRECT_PASSWORD_OR_EMAIL");
+        toast.warning("E-mail ou senha incorretos.");
       }
     } catch (err) {
       console.log(err);
+      toast.error("Erro ao fazer login.");
     }
   }
 

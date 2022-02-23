@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { useContext } from "react";
 
 import AppLayout from "../../components/AppLayout";
+import Loading from "../../components/Loading";
 import { UserContext } from "../../contexts/UserContext";
 
 const columns: GridColDef[] = [
@@ -79,7 +80,7 @@ export default function History(): JSX.Element {
                   />
                 </Box>
               ) : (
-                "Carregando..."
+                <Loading />
               )}
             </Paper>
           </Grid>

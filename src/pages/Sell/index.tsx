@@ -13,6 +13,7 @@ import {
   Radio,
 } from "@mui/material";
 import { useState, useContext } from "react";
+import { toast } from "react-toastify";
 
 import AppLayout from "../../components/AppLayout";
 import { CurrentCryptoContext } from "../../contexts/CurrentCryptoContext";
@@ -28,76 +29,91 @@ export default function Sell(): JSX.Element {
   const [value, setValue] = useState<number>();
 
   async function handleSell() {
-    if (currentUser && currentUser.id) {
-      const currentRealBalance = currentUser.real;
-      const currentBtcBalance = currentUser.btc;
-      const currentBritaBalance = currentUser.brita;
+    try {
+      if (currentUser && currentUser.id) {
+        const currentRealBalance = currentUser.real;
+        const currentBtcBalance = currentUser.btc;
+        const currentBritaBalance = currentUser.brita;
 
-      if (crypto === "bitcoin" && currentBtc && value) {
-        const sellAmount = btcToReal(value, currentBtc);
+        if (crypto === "bitcoin" && currentBtc && value) {
+          const sellAmount = btcToReal(value, currentBtc);
 
-        if (value > currentBtcBalance) {
-          console.log("INVALID_OPERATION");
-        } else {
-          const newBtcBalance = currentBtcBalance - value;
-          const newRealBalance = currentRealBalance + sellAmount;
-          const updateRes = await db.user.update(currentUser.id, {
-            real: newRealBalance,
-            btc: newBtcBalance,
-            history: [
-              ...currentUser.history,
-              {
-                id: new Date(),
-                date: new Date(),
-                operation: `sell-${crypto}`,
-                value,
-              },
-            ],
-          });
-          if (updateRes) {
-            const userExists = await db.user
-              .where({ email: currentUser.email })
-              .toArray();
-            if (userExists.length) {
-              setCurrentUser(userExists[0]);
+          if (value < 0) {
+            toast.warning("O valor precisa ser maior do que 0.");
+          } else if (value > currentBtcBalance) {
+            toast.warning("O valor não pode ser maior do que seu saldo.");
+          } else {
+            const newBtcBalance = currentBtcBalance - value;
+            const newRealBalance = currentRealBalance + sellAmount;
+            const updateRes = await db.user.update(currentUser.id, {
+              real: newRealBalance,
+              btc: newBtcBalance,
+              history: [
+                ...currentUser.history,
+                {
+                  id: new Date(),
+                  date: new Date(),
+                  operation: `sell-${crypto}`,
+                  value,
+                },
+              ],
+            });
+            if (updateRes) {
+              toast.success("Venda realizada com sucesso.");
+              const userExists = await db.user
+                .where({ email: currentUser.email })
+                .toArray();
+              if (userExists.length) {
+                setCurrentUser(userExists[0]);
+              }
+            } else {
+              toast.error("Erro ao vender crypto.");
             }
           }
-          console.log("SELL_SUCESSFUL");
         }
-      }
 
-      if (crypto === "brita" && currentBrita && value) {
-        const sellAmount = britaToReal(value, currentBrita);
+        if (crypto === "brita" && currentBrita && value) {
+          const sellAmount = britaToReal(value, currentBrita);
 
-        if (value > currentBritaBalance) {
-          console.log("INVALID_OPERATION");
-        } else {
-          const newBritaBalance = currentBritaBalance - value;
-          const newRealBalance = currentRealBalance + sellAmount;
-          const updateRes = await db.user.update(currentUser.id, {
-            real: newRealBalance,
-            brita: newBritaBalance,
-            history: [
-              ...currentUser.history,
-              {
-                id: new Date(),
-                date: new Date(),
-                operation: `sell-${crypto}`,
-                value,
-              },
-            ],
-          });
-          if (updateRes) {
-            const userExists = await db.user
-              .where({ email: currentUser.email })
-              .toArray();
-            if (userExists.length) {
-              setCurrentUser(userExists[0]);
+          if (value < 0) {
+            toast.warning("O valor precisa ser maior do que 0.");
+          } else if (value > currentBritaBalance) {
+            toast.warning("O valor não pode ser maior do que seu saldo.");
+          } else {
+            const newBritaBalance = currentBritaBalance - value;
+            const newRealBalance = currentRealBalance + sellAmount;
+            const updateRes = await db.user.update(currentUser.id, {
+              real: newRealBalance,
+              brita: newBritaBalance,
+              history: [
+                ...currentUser.history,
+                {
+                  id: new Date(),
+                  date: new Date(),
+                  operation: `sell-${crypto}`,
+                  value,
+                },
+              ],
+            });
+            if (updateRes) {
+              toast.success("Venda realizada com sucesso.");
+              const userExists = await db.user
+                .where({ email: currentUser.email })
+                .toArray();
+              if (userExists.length) {
+                setCurrentUser(userExists[0]);
+              }
+            } else {
+              toast.error("Erro ao vender crypto.");
             }
           }
-          console.log("SELL_SUCESSFUL");
         }
+      } else {
+        toast.error("Erro ao vender crypto.");
       }
+    } catch (err) {
+      console.log(err);
+      toast.error("Erro ao vender crypto.");
     }
   }
 

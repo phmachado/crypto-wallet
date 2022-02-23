@@ -10,8 +10,11 @@ import {
 } from "@mui/material";
 import CryptoJS from "crypto-js";
 import { useState, useContext, useEffect } from "react";
+import { toast } from "react-toastify";
+import validator from "validator";
 
 import AppLayout from "../../components/AppLayout";
+import Loading from "../../components/Loading";
 import { UserContext } from "../../contexts/UserContext";
 import { db } from "../../db";
 
@@ -34,7 +37,13 @@ export default function Profile(): JSX.Element {
 
   async function handleUpdateUser() {
     try {
-      if (currentUser && currentUser.id) {
+      if (password.length < 6) {
+        toast.warning("A senha deve ter mais de 6 caracteres.");
+      } else if (!validator.isEmail(email)) {
+        toast.warning("O e-mail não é válido.");
+      } else if (!validator.isAlpha(name, "pt-BR")) {
+        toast.warning("O nome não é válido.");
+      } else if (currentUser && currentUser.id) {
         const hashedPassword = CryptoJS.AES.encrypt(
           password,
           "secret"
@@ -50,11 +59,18 @@ export default function Profile(): JSX.Element {
             .toArray();
           if (userExists.length) {
             setCurrentUser(userExists[0]);
+          } else {
+            toast.error("Erro ao atualizar usuário.");
           }
+        } else {
+          toast.error("Erro ao atualizar usuário.");
         }
+      } else {
+        toast.error("Erro ao atualizar usuário.");
       }
     } catch (err) {
       console.log(err);
+      toast.error("Erro ao atualizar usuário.");
     }
   }
 
@@ -124,7 +140,7 @@ export default function Profile(): JSX.Element {
                   </Button>
                 </Box>
               ) : (
-                "Carregando..."
+                <Loading />
               )}
             </Paper>
           </Grid>
