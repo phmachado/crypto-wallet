@@ -1,5 +1,5 @@
 import { Button, TextField, Link, Box } from "@mui/material";
-import { useState, useContext } from "react";
+import CryptoJS from "crypto-js";
 import { useNavigate } from "react-router-dom";
 
 import CredentialsLayout from "../../components/CredentialsLayout";
@@ -20,10 +20,14 @@ export default function SignUp(): JSX.Element {
       if (password !== checkPassword) {
         console.log("PASSWORD_DONT_MATCH");
       } else {
+        const hashedPassword = CryptoJS.AES.encrypt(
+          password,
+          "secret"
+        ).toString();
         const newUser = await db.user.add({
           name,
           email,
-          password,
+          password: hashedPassword,
           real: 100000,
           btc: 0,
           brita: 0,
@@ -31,11 +35,15 @@ export default function SignUp(): JSX.Element {
         });
         if (newUser) {
           const createdUser = await db.user
-            .where({ email, password })
+            .where({ email, password: hashedPassword })
             .toArray();
           if (createdUser.length) {
             setCurrentUser(createdUser[0]);
             localStorage.setItem("currentUser", createdUser[0].email);
+            const dummyToken = localStorage.getItem("dummyToken");
+            if (!dummyToken || dummyToken === "remove-access") {
+              localStorage.setItem("dummyToken", "grant-access");
+            }
             navigate("/dashboard");
           }
         }
