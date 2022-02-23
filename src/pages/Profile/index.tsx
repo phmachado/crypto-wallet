@@ -8,6 +8,7 @@ import {
   Typography,
   Grid,
 } from "@mui/material";
+import CryptoJS from "crypto-js";
 import { useState, useContext, useEffect } from "react";
 
 import AppLayout from "../../components/AppLayout";
@@ -15,7 +16,7 @@ import { UserContext } from "../../contexts/UserContext";
 import { db } from "../../db";
 
 export default function Profile(): JSX.Element {
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
 
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -25,18 +26,32 @@ export default function Profile(): JSX.Element {
     if (currentUser) {
       setName(currentUser.name);
       setEmail(currentUser.email);
-      setPassword(currentUser.password);
+      const bytes = CryptoJS.AES.decrypt(currentUser.password, "secret");
+      const originalText = bytes.toString(CryptoJS.enc.Utf8);
+      setPassword(originalText);
     }
   }, [currentUser]);
 
   async function handleUpdateUser() {
     try {
       if (currentUser && currentUser.id) {
-        await db.user.update(currentUser.id, {
+        const hashedPassword = CryptoJS.AES.encrypt(
+          password,
+          "secret"
+        ).toString();
+        const updateRes = await db.user.update(currentUser.id, {
           name,
           email,
-          password,
+          password: hashedPassword,
         });
+        if (updateRes) {
+          const userExists = await db.user
+            .where({ email: currentUser.email })
+            .toArray();
+          if (userExists.length) {
+            setCurrentUser(userExists[0]);
+          }
+        }
       }
     } catch (err) {
       console.log(err);
