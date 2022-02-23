@@ -2,10 +2,12 @@ import { ShowChartOutlined } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import { format } from "date-fns";
 
+import { formatReal } from "../../../../utils";
+
 type Props = {
   currency: string;
-  value: number | string | undefined;
-  lastUpdate: number | string | undefined;
+  value: number;
+  lastUpdate: number | string;
 };
 
 export default function CurrencyToday({
@@ -15,9 +17,8 @@ export default function CurrencyToday({
 }: Props): JSX.Element {
   const lasUpdateDate =
     currency === "Bitcoin"
-      ? lastUpdate &&
-        format(new Date(Number(lastUpdate) * 1000), "dd/MM/yyyy 'às' HH'h'mm")
-      : lastUpdate && format(new Date(lastUpdate), "dd/MM/yyyy 'às' HH'h'mm");
+      ? format(new Date(Number(lastUpdate) * 1000), "dd/MM/yyyy 'às' HH'h'mm")
+      : format(new Date(lastUpdate), "dd/MM/yyyy 'às' HH'h'mm");
 
   return (
     <Box sx={{ p: 4, display: "flex", flexDirection: "column" }}>
@@ -25,22 +26,9 @@ export default function CurrencyToday({
         <ShowChartOutlined /> {currency}
       </Typography>
       <Box sx={{ px: 4, py: 3 }}>
-        <Typography variant="h4">
-          {value ? (
-            <>
-              {Number(value).toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}
-            </>
-          ) : (
-            "Carregando..."
-          )}
-        </Typography>
+        <Typography variant="h4">{formatReal(value)}</Typography>
         <Typography variant="caption">
-          {lasUpdateDate
-            ? `Última atualização em ${lasUpdateDate}`
-            : "Carregando..."}
+          Última atualização em {lasUpdateDate}
         </Typography>
       </Box>
     </Box>

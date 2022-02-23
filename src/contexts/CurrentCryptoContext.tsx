@@ -7,23 +7,21 @@ type Props = {
   children: ReactNode;
 };
 
-type DashboardContextType = {
-  btc: string | undefined;
+type CurrentCryptoContextType = {
+  currentBtc: number | undefined;
   btcLastUpdate: number | undefined;
-  brita: number | undefined;
+  currentBrita: number | undefined;
   britaLastUpdate: string | undefined;
-  realToBtc: (real: number) => number;
-  realToBrita: (real: number) => number;
 };
 
 const initialValue = {};
 
-export const DashboardContext = createContext(
-  initialValue as DashboardContextType
+export const CurrentCryptoContext = createContext(
+  initialValue as CurrentCryptoContextType
 );
 
-export function DashboardContextProvider({ children }: Props) {
-  const [btc, setBtc] = useState<string>();
+export function CurrentCryptoContextProvider({ children }: Props) {
+  const [btc, setBtc] = useState<number>();
   const [btcLastUpdate, setBtcLastUpdate] = useState<number>();
   const [brita, setBrita] = useState<number>();
   const [britaLastUpdate, setBritaLastUpdate] = useState<string>();
@@ -43,7 +41,7 @@ export function DashboardContextProvider({ children }: Props) {
       await axios
         .get("https://www.mercadobitcoin.net/api/BTC/ticker/")
         .then((res) => {
-          setBtc(res.data.ticker.last);
+          setBtc(Number(res.data.ticker.last));
           setBtcLastUpdate(res.data.ticker.date);
         });
     }
@@ -61,25 +59,16 @@ export function DashboardContextProvider({ children }: Props) {
     getBrita();
   }, []);
 
-  function realToBtc(real: number): number {
-    return real / Number(btc);
-  }
-  function realToBrita(real: number): number {
-    return real / Number(brita);
-  }
-
   return (
-    <DashboardContext.Provider
+    <CurrentCryptoContext.Provider
       value={{
-        btc,
+        currentBtc: btc,
         btcLastUpdate,
-        brita,
+        currentBrita: brita,
         britaLastUpdate,
-        realToBtc,
-        realToBrita,
       }}
     >
       {children}
-    </DashboardContext.Provider>
+    </CurrentCryptoContext.Provider>
   );
 }

@@ -2,6 +2,8 @@ import { AccountBalanceWalletOutlined } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import { format } from "date-fns";
 
+import { formatReal, formatBtc, formatBrita } from "../../../../utils";
+
 type Props = {
   real: number;
   btc: number;
@@ -19,34 +21,13 @@ export default function Balance({ real, btc, brita }: Props) {
       </Typography>
       <Box sx={{ px: 4, paddingTop: 2 }}>
         <Typography sx={{ marginBottom: 1 }} variant="h6">
-          {real ? (
-            <>
-              Real:{" "}
-              {real.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}
-            </>
-          ) : (
-            "Carregando..."
-          )}
+          Real: {formatReal(real)}
         </Typography>
         <Typography sx={{ marginBottom: 1 }} variant="h6">
-          Bitcoin: {btc ? <>{btc.toFixed(8)} BTC</> : "Carregando..."}
+          Bitcoin: {formatBtc(btc)} BTC
         </Typography>
         <Typography sx={{ marginBottom: 1 }} variant="h6">
-          Brita:{" "}
-          {brita ? (
-            <>
-              B${" "}
-              {brita.toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </>
-          ) : (
-            "Carregando..."
-          )}
+          Brita: B$ {formatBrita(brita)}
         </Typography>
       </Box>
     </Box>

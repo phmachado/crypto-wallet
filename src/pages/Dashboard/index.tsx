@@ -3,15 +3,15 @@ import { Container, Grid, Paper, Typography, Box } from "@mui/material";
 import { useContext } from "react";
 
 import AppLayout from "../../components/AppLayout";
-import { DashboardContext } from "../../contexts/DashboardContext";
+import { CurrentCryptoContext } from "../../contexts/CurrentCryptoContext";
+import { UserContext } from "../../contexts/UserContext";
 import Balance from "./components/Balance";
 import CurrencyToday from "./components/CurrencyToday";
 
-const balance = 100000;
-
 export default function Dashboard(): JSX.Element {
-  const { btc, btcLastUpdate, brita, britaLastUpdate, realToBrita, realToBtc } =
-    useContext(DashboardContext);
+  const { currentBtc, btcLastUpdate, currentBrita, britaLastUpdate } =
+    useContext(CurrentCryptoContext);
+  const { currentUser } = useContext(UserContext);
 
   return (
     <AppLayout>
@@ -30,11 +30,15 @@ export default function Dashboard(): JSX.Element {
                 flexDirection: "column",
               }}
             >
-              <Balance
-                real={balance}
-                btc={realToBtc(balance)}
-                brita={realToBrita(balance)}
-              />
+              {currentUser ? (
+                <Balance
+                  real={currentUser.real}
+                  btc={currentUser.btc}
+                  brita={currentUser.brita}
+                />
+              ) : (
+                "Carregando..."
+              )}
             </Paper>
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
@@ -45,11 +49,15 @@ export default function Dashboard(): JSX.Element {
                 flexDirection: "column",
               }}
             >
-              <CurrencyToday
-                currency="Bitcoin"
-                value={btc}
-                lastUpdate={btcLastUpdate}
-              />
+              {currentBtc && btcLastUpdate ? (
+                <CurrencyToday
+                  currency="Bitcoin"
+                  value={currentBtc}
+                  lastUpdate={btcLastUpdate}
+                />
+              ) : (
+                "Carregando..."
+              )}
             </Paper>
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
@@ -60,11 +68,15 @@ export default function Dashboard(): JSX.Element {
                 flexDirection: "column",
               }}
             >
-              <CurrencyToday
-                currency="Brita"
-                value={brita}
-                lastUpdate={britaLastUpdate}
-              />
+              {currentBrita && britaLastUpdate ? (
+                <CurrencyToday
+                  currency="Brita"
+                  value={currentBrita}
+                  lastUpdate={britaLastUpdate}
+                />
+              ) : (
+                "Carregando..."
+              )}
             </Paper>
           </Grid>
         </Grid>

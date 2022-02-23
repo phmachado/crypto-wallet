@@ -20,36 +20,35 @@ import { UserContext } from "../../contexts/UserContext";
 import { db } from "../../db";
 import { btcToReal, britaToReal } from "../../utils";
 
-export default function Sell(): JSX.Element {
+export default function Buy(): JSX.Element {
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const { currentBtc, currentBrita } = useContext(CurrentCryptoContext);
 
   const [crypto, setCrypto] = useState<string>("bitcoin");
   const [value, setValue] = useState<number>();
 
-  async function handleSell() {
+  async function handleBuyBtc() {
     if (currentUser && currentUser.id) {
       const currentRealBalance = currentUser.real;
       const currentBtcBalance = currentUser.btc;
       const currentBritaBalance = currentUser.brita;
 
       if (crypto === "bitcoin" && currentBtc && value) {
-        const sellAmount = btcToReal(value, currentBtc);
+        const purchaseAmount = btcToReal(value, currentBtc);
 
-        if (value > currentBtcBalance) {
+        if (purchaseAmount > currentRealBalance) {
           console.log("INVALID_OPERATION");
         } else {
-          const newBtcBalance = currentBtcBalance - value;
-          const newRealBalance = currentRealBalance + sellAmount;
+          const newRealBalance = currentRealBalance - purchaseAmount;
           const updateRes = await db.user.update(currentUser.id, {
             real: newRealBalance,
-            btc: newBtcBalance,
+            btc: currentBtcBalance + value,
             history: [
               ...currentUser.history,
               {
                 id: new Date(),
                 date: new Date(),
-                operation: `sell-${crypto}`,
+                operation: `buy-${crypto}`,
                 value,
               },
             ],
@@ -62,27 +61,26 @@ export default function Sell(): JSX.Element {
               setCurrentUser(userExists[0]);
             }
           }
-          console.log("SELL_SUCESSFUL");
+          console.log("PURCHASE_SUCESSFUL");
         }
       }
 
       if (crypto === "brita" && currentBrita && value) {
-        const sellAmount = britaToReal(value, currentBrita);
+        const purchaseAmount = britaToReal(value, currentBrita);
 
-        if (value > currentBritaBalance) {
+        if (purchaseAmount > currentRealBalance) {
           console.log("INVALID_OPERATION");
         } else {
-          const newBritaBalance = currentBritaBalance - value;
-          const newRealBalance = currentRealBalance + sellAmount;
+          const newRealBalance = currentRealBalance - purchaseAmount;
           const updateRes = await db.user.update(currentUser.id, {
             real: newRealBalance,
-            brita: newBritaBalance,
+            brita: currentBritaBalance + value,
             history: [
               ...currentUser.history,
               {
                 id: new Date(),
                 date: new Date(),
-                operation: `sell-${crypto}`,
+                operation: `buy-${crypto}`,
                 value,
               },
             ],
@@ -95,7 +93,7 @@ export default function Sell(): JSX.Element {
               setCurrentUser(userExists[0]);
             }
           }
-          console.log("SELL_SUCESSFUL");
+          console.log("PURCHASE_SUCESSFUL");
         }
       }
     }
@@ -106,7 +104,7 @@ export default function Sell(): JSX.Element {
       <Container maxWidth="lg" sx={{ mb: 4 }}>
         <Box my={4}>
           <Typography variant="h4">
-            <AttachMoneyOutlined /> Vender
+            <AttachMoneyOutlined /> Comprar
           </Typography>
         </Box>
         <Grid container spacing={3}>
@@ -120,7 +118,7 @@ export default function Sell(): JSX.Element {
               }}
             >
               <Typography sx={{ marginBottom: 1 }} variant="h6">
-                Selecione a criptomoeda que deseja vender:
+                Selecione a criptomoeda que deseja comprar:
               </Typography>
               <FormControl sx={{ marginBottom: 2 }}>
                 <RadioGroup
@@ -157,9 +155,9 @@ export default function Sell(): JSX.Element {
                 disabled={!value}
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                onClick={() => handleSell()}
+                onClick={() => handleBuyBtc()}
               >
-                Vender
+                Comprar
               </Button>
             </Paper>
           </Grid>
