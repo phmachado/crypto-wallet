@@ -15,3 +15,11 @@ export function formatBrita(brita: number): string {
     maximumFractionDigits: 2,
   });
 }
+
+export function btcToReal(btc: number, currentBtcInReal: number): number {
+  return btc * currentBtcInReal;
+}
+
+export function britaToReal(brita: number, currentBritaInReal: number): number {
+  return brita * currentBritaInReal;
+}
