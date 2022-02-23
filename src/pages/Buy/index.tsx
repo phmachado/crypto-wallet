@@ -13,6 +13,7 @@ import {
   Radio,
 } from "@mui/material";
 import { useState, useContext } from "react";
+import { toast } from "react-toastify";
 
 import AppLayout from "../../components/AppLayout";
 import { CurrentCryptoContext } from "../../contexts/CurrentCryptoContext";
@@ -28,74 +29,89 @@ export default function Buy(): JSX.Element {
   const [value, setValue] = useState<number>();
 
   async function handleBuyBtc() {
-    if (currentUser && currentUser.id) {
-      const currentRealBalance = currentUser.real;
-      const currentBtcBalance = currentUser.btc;
-      const currentBritaBalance = currentUser.brita;
+    try {
+      if (currentUser && currentUser.id) {
+        const currentRealBalance = currentUser.real;
+        const currentBtcBalance = currentUser.btc;
+        const currentBritaBalance = currentUser.brita;
 
-      if (crypto === "bitcoin" && currentBtc && value) {
-        const purchaseAmount = btcToReal(value, currentBtc);
+        if (crypto === "bitcoin" && currentBtc && value) {
+          const purchaseAmount = btcToReal(value, currentBtc);
 
-        if (purchaseAmount > currentRealBalance) {
-          console.log("INVALID_OPERATION");
-        } else {
-          const newRealBalance = currentRealBalance - purchaseAmount;
-          const updateRes = await db.user.update(currentUser.id, {
-            real: newRealBalance,
-            btc: currentBtcBalance + value,
-            history: [
-              ...currentUser.history,
-              {
-                id: new Date(),
-                date: new Date(),
-                operation: `buy-${crypto}`,
-                value,
-              },
-            ],
-          });
-          if (updateRes) {
-            const userExists = await db.user
-              .where({ email: currentUser.email })
-              .toArray();
-            if (userExists.length) {
-              setCurrentUser(userExists[0]);
+          if (value < 0) {
+            toast.warning("O valor precisa ser maior do que 0.");
+          } else if (purchaseAmount > currentRealBalance) {
+            toast.warning("O valor precisa ser menor do que seu saldo atual.");
+          } else {
+            const newRealBalance = currentRealBalance - purchaseAmount;
+            const updateRes = await db.user.update(currentUser.id, {
+              real: newRealBalance,
+              btc: currentBtcBalance + value,
+              history: [
+                ...currentUser.history,
+                {
+                  id: new Date(),
+                  date: new Date(),
+                  operation: `buy-${crypto}`,
+                  value,
+                },
+              ],
+            });
+            if (updateRes) {
+              toast.success("Compra realizada com sucesso.");
+              const userExists = await db.user
+                .where({ email: currentUser.email })
+                .toArray();
+              if (userExists.length) {
+                setCurrentUser(userExists[0]);
+              }
+            } else {
+              toast.error("Erro ao comprar crypto.");
             }
           }
-          console.log("PURCHASE_SUCESSFUL");
         }
-      }
 
-      if (crypto === "brita" && currentBrita && value) {
-        const purchaseAmount = britaToReal(value, currentBrita);
+        if (crypto === "brita" && currentBrita && value) {
+          const purchaseAmount = britaToReal(value, currentBrita);
 
-        if (purchaseAmount > currentRealBalance) {
-          console.log("INVALID_OPERATION");
-        } else {
-          const newRealBalance = currentRealBalance - purchaseAmount;
-          const updateRes = await db.user.update(currentUser.id, {
-            real: newRealBalance,
-            brita: currentBritaBalance + value,
-            history: [
-              ...currentUser.history,
-              {
-                id: new Date(),
-                date: new Date(),
-                operation: `buy-${crypto}`,
-                value,
-              },
-            ],
-          });
-          if (updateRes) {
-            const userExists = await db.user
-              .where({ email: currentUser.email })
-              .toArray();
-            if (userExists.length) {
-              setCurrentUser(userExists[0]);
+          if (value < 0) {
+            toast.warning("O valor precisa ser maior do que 0.");
+          } else if (purchaseAmount > currentRealBalance) {
+            toast.warning("O valor precisa ser menor do que seu saldo atual.");
+          } else {
+            const newRealBalance = currentRealBalance - purchaseAmount;
+            const updateRes = await db.user.update(currentUser.id, {
+              real: newRealBalance,
+              brita: currentBritaBalance + value,
+              history: [
+                ...currentUser.history,
+                {
+                  id: new Date(),
+                  date: new Date(),
+                  operation: `buy-${crypto}`,
+                  value,
+                },
+              ],
+            });
+            if (updateRes) {
+              toast.success("Compra realizada com sucesso.");
+              const userExists = await db.user
+                .where({ email: currentUser.email })
+                .toArray();
+              if (userExists.length) {
+                setCurrentUser(userExists[0]);
+              }
+            } else {
+              toast.error("Erro ao comprar crypto.");
             }
           }
-          console.log("PURCHASE_SUCESSFUL");
         }
+      } else {
+        toast.error("Erro ao comprar crypto.");
       }
+    } catch (err) {
+      console.log(err);
+      toast.error("Erro ao comprar crypto.");
     }
   }
 
