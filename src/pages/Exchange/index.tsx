@@ -26,6 +26,7 @@ export default function Exchange(): JSX.Element {
   const [value, setValue] = useState<number>();
   const [isSwap, setIsSwap] = useState<boolean>(false);
   const [crypto, setCrypto] = useState<string[]>(["Bitcoin", "Brita"]);
+
   // isSwap === true -> brita-bitcoin
   // isSwap === false -> bitcoin-brita
   async function handleExchange() {
@@ -51,6 +52,15 @@ export default function Exchange(): JSX.Element {
           const updateRes = await db.user.update(currentUser.id, {
             btc: newBtcBalance,
             brita: newBritaBalance,
+            history: [
+              ...currentUser.history,
+              {
+                id: new Date(),
+                date: new Date(),
+                operation: `exchange-${operation}`,
+                value,
+              },
+            ],
           });
           if (updateRes) {
             const userExists = await db.user
@@ -84,6 +94,15 @@ export default function Exchange(): JSX.Element {
           const updateRes = await db.user.update(currentUser.id, {
             btc: newBtcBalance,
             brita: newBritaBalance,
+            history: [
+              ...currentUser.history,
+              {
+                id: new Date(),
+                date: new Date(),
+                operation: `exchange-${operation}`,
+                value,
+              },
+            ],
           });
           if (updateRes) {
             const userExists = await db.user

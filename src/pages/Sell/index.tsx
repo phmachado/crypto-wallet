@@ -44,6 +44,15 @@ export default function Sell(): JSX.Element {
           const updateRes = await db.user.update(currentUser.id, {
             real: newRealBalance,
             btc: newBtcBalance,
+            history: [
+              ...currentUser.history,
+              {
+                id: new Date(),
+                date: new Date(),
+                operation: `sell-${crypto}`,
+                value,
+              },
+            ],
           });
           if (updateRes) {
             const userExists = await db.user
@@ -68,6 +77,15 @@ export default function Sell(): JSX.Element {
           const updateRes = await db.user.update(currentUser.id, {
             real: newRealBalance,
             brita: newBritaBalance,
+            history: [
+              ...currentUser.history,
+              {
+                id: new Date(),
+                date: new Date(),
+                operation: `sell-${crypto}`,
+                value,
+              },
+            ],
           });
           if (updateRes) {
             const userExists = await db.user
