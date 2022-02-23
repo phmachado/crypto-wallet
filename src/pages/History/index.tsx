@@ -1,64 +1,54 @@
 import { HistoryOutlined } from "@mui/icons-material";
 import { Container, Grid, Paper, Typography, Box } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { format } from "date-fns";
+import { useContext } from "react";
 
 import AppLayout from "../../components/AppLayout";
+import { UserContext } from "../../contexts/UserContext";
 
 const columns: GridColDef[] = [
   {
     field: "date",
     headerName: "Data",
-    width: 150,
+    width: 300,
+    valueFormatter: ({ value }) => {
+      return format(new Date(String(value)), "dd/MM/yyyy 'às' HH'h'mm");
+    },
   },
   {
     field: "operation",
     headerName: "Operação",
-    width: 250,
+    width: 350,
+    valueFormatter: ({ value }) => {
+      switch (value) {
+        case "buy-bitcoin":
+          return "Compra de Bitcoin";
+        case "buy-brita":
+          return "Compra de Brita";
+        case "sell-bitcoin":
+          return "Venda de Bitcoin";
+        case "sell-brita":
+          return "Venda de Brita";
+        case "exchange-bitcoin-brita":
+          return "Troca de Bitcoin por Brita";
+        case "exchange-brita-bitcoin":
+          return "Troca de Brita por Bitcoin";
+        default:
+          return value;
+      }
+    },
   },
   {
     field: "value",
     headerName: "Valor",
-    width: 150,
-  },
-  {
-    field: "valueInReais",
-    headerName: "Valor em Reais",
-    width: 150,
-  },
-];
-
-const rows = [
-  {
-    id: 1,
-    date: "19/02/2022",
-    operation: "Venda de Bitcoin",
-    value: 0.85251,
-    valueInReais: 50000,
-  },
-  {
-    id: 2,
-    date: "19/02/2022",
-    operation: "Venda de Brita",
-    value: 50000,
-    valueInReais: 50000,
-  },
-  {
-    id: 3,
-    date: "19/02/2022",
-    operation: "Troca de Brita por Bitcoin",
-    value: 5000,
-    valueInReais: 50000,
-  },
-  {
-    id: 4,
-    date: "19/02/2022",
-    operation: "Troca de Bitcoin por Brita",
-    value: 0.001,
-    valueInReais: 50000,
+    width: 300,
   },
 ];
 
 export default function History(): JSX.Element {
+  const { currentUser } = useContext(UserContext);
+
   return (
     <AppLayout>
       <Container maxWidth="lg" sx={{ mb: 4 }}>
@@ -76,17 +66,21 @@ export default function History(): JSX.Element {
                 flexDirection: "column",
               }}
             >
-              <Box sx={{ height: 400, width: "100%" }}>
-                <DataGrid
-                  rows={rows}
-                  columns={columns}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
-                  disableSelectionOnClick
-                  disableColumnSelector
-                  disableColumnMenu
-                />
-              </Box>
+              {currentUser ? (
+                <Box sx={{ height: 400, width: "100%" }}>
+                  <DataGrid
+                    rows={currentUser.history}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    disableSelectionOnClick
+                    disableColumnSelector
+                    disableColumnMenu
+                  />
+                </Box>
+              ) : (
+                "Carregando..."
+              )}
             </Paper>
           </Grid>
         </Grid>
