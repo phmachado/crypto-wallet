@@ -3,6 +3,7 @@ import { Container, Grid, Paper, Typography, Box } from "@mui/material";
 import { useContext } from "react";
 
 import AppLayout from "../../components/AppLayout";
+import Loading from "../../components/Loading";
 import { CurrentCryptoContext } from "../../contexts/CurrentCryptoContext";
 import { UserContext } from "../../contexts/UserContext";
 import Balance from "./components/Balance";
@@ -37,7 +38,7 @@ export default function Dashboard(): JSX.Element {
                   brita={currentUser.brita}
                 />
               ) : (
-                "Carregando..."
+                <Loading />
               )}
             </Paper>
           </Grid>
@@ -56,7 +57,7 @@ export default function Dashboard(): JSX.Element {
                   lastUpdate={btcLastUpdate}
                 />
               ) : (
-                "Carregando..."
+                <Loading />
               )}
             </Paper>
           </Grid>
@@ -75,7 +76,7 @@ export default function Dashboard(): JSX.Element {
                   lastUpdate={britaLastUpdate}
                 />
               ) : (
-                "Carregando..."
+                <Loading />
               )}
             </Paper>
           </Grid>

@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import validator from "validator";
 
 import AppLayout from "../../components/AppLayout";
+import Loading from "../../components/Loading";
 import { UserContext } from "../../contexts/UserContext";
 import { db } from "../../db";
 
@@ -139,7 +140,7 @@ export default function Profile(): JSX.Element {
                   </Button>
                 </Box>
               ) : (
-                "Carregando..."
+                <Loading />
               )}
             </Paper>
           </Grid>
