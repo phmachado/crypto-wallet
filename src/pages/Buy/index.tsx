@@ -28,7 +28,8 @@ export default function Buy(): JSX.Element {
   const [crypto, setCrypto] = useState<string>("bitcoin");
   const [value, setValue] = useState<number>();
 
-  async function handleBuyBtc() {
+  // Função para lidar com a compra de crypto
+  async function handleBuy() {
     try {
       if (currentUser && currentUser.id) {
         const currentRealBalance = currentUser.real;
@@ -36,6 +37,7 @@ export default function Buy(): JSX.Element {
         const currentBritaBalance = currentUser.brita;
 
         if (crypto === "bitcoin" && currentBtc && value) {
+          // Cálculo do valor de compra em R$
           const purchaseAmount = btcToReal(value, currentBtc);
 
           if (value < 0) {
@@ -43,10 +45,13 @@ export default function Buy(): JSX.Element {
           } else if (purchaseAmount > currentRealBalance) {
             toast.warning("O valor precisa ser menor do que seu saldo atual.");
           } else {
+            // Cálculo do novo valor de R$ e BTC
             const newRealBalance = currentRealBalance - purchaseAmount;
+            const newBtcBalance = currentBtcBalance + value;
+            // Atualização do usuário com os novos valores
             const updateRes = await db.user.update(currentUser.id, {
               real: newRealBalance,
-              btc: currentBtcBalance + value,
+              btc: newBtcBalance,
               history: [
                 ...currentUser.history,
                 {
@@ -57,6 +62,7 @@ export default function Buy(): JSX.Element {
                 },
               ],
             });
+            // Atualização do estado referente ao usuário logado
             if (updateRes) {
               toast.success("Compra realizada com sucesso.");
               const userExists = await db.user
@@ -72,6 +78,7 @@ export default function Buy(): JSX.Element {
         }
 
         if (crypto === "brita" && currentBrita && value) {
+          // Cálculo do valor de compra em R$
           const purchaseAmount = britaToReal(value, currentBrita);
 
           if (value < 0) {
@@ -79,10 +86,13 @@ export default function Buy(): JSX.Element {
           } else if (purchaseAmount > currentRealBalance) {
             toast.warning("O valor precisa ser menor do que seu saldo atual.");
           } else {
+            // Cálculo do novo valor de R$ e Brita
             const newRealBalance = currentRealBalance - purchaseAmount;
+            const newBritaBalance = currentBritaBalance + value;
+            // Atualização do usuário com os novos valores
             const updateRes = await db.user.update(currentUser.id, {
               real: newRealBalance,
-              brita: currentBritaBalance + value,
+              brita: newBritaBalance,
               history: [
                 ...currentUser.history,
                 {
@@ -93,6 +103,7 @@ export default function Buy(): JSX.Element {
                 },
               ],
             });
+            // Atualização do estado referente ao usuário logado
             if (updateRes) {
               toast.success("Compra realizada com sucesso.");
               const userExists = await db.user
@@ -171,7 +182,7 @@ export default function Buy(): JSX.Element {
                 disabled={!value}
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                onClick={() => handleBuyBtc()}
+                onClick={() => handleBuy()}
               >
                 Comprar
               </Button>

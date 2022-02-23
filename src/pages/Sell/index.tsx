@@ -28,6 +28,7 @@ export default function Sell(): JSX.Element {
   const [crypto, setCrypto] = useState<string>("bitcoin");
   const [value, setValue] = useState<number>();
 
+  // Função para lidar com a venda de crypto
   async function handleSell() {
     try {
       if (currentUser && currentUser.id) {
@@ -36,6 +37,7 @@ export default function Sell(): JSX.Element {
         const currentBritaBalance = currentUser.brita;
 
         if (crypto === "bitcoin" && currentBtc && value) {
+          // Cálculo do valor de venda em R$
           const sellAmount = btcToReal(value, currentBtc);
 
           if (value < 0) {
@@ -43,8 +45,10 @@ export default function Sell(): JSX.Element {
           } else if (value > currentBtcBalance) {
             toast.warning("O valor não pode ser maior do que seu saldo.");
           } else {
+            // Cálculo do novo valor de R$ e BTC
             const newBtcBalance = currentBtcBalance - value;
             const newRealBalance = currentRealBalance + sellAmount;
+            // Atualização do usuário com os novos valores
             const updateRes = await db.user.update(currentUser.id, {
               real: newRealBalance,
               btc: newBtcBalance,
@@ -58,6 +62,7 @@ export default function Sell(): JSX.Element {
                 },
               ],
             });
+            // Atualização do estado referente ao usuário logado
             if (updateRes) {
               toast.success("Venda realizada com sucesso.");
               const userExists = await db.user
@@ -73,6 +78,7 @@ export default function Sell(): JSX.Element {
         }
 
         if (crypto === "brita" && currentBrita && value) {
+          // Cálculo do valor de venda em R$
           const sellAmount = britaToReal(value, currentBrita);
 
           if (value < 0) {
@@ -80,8 +86,10 @@ export default function Sell(): JSX.Element {
           } else if (value > currentBritaBalance) {
             toast.warning("O valor não pode ser maior do que seu saldo.");
           } else {
+            // Cálculo do novo valor de R$ e Brita
             const newBritaBalance = currentBritaBalance - value;
             const newRealBalance = currentRealBalance + sellAmount;
+            // Atualização do usuário com os novos valores
             const updateRes = await db.user.update(currentUser.id, {
               real: newRealBalance,
               brita: newBritaBalance,
@@ -95,6 +103,7 @@ export default function Sell(): JSX.Element {
                 },
               ],
             });
+            // Atualização do estado referente ao usuário logado
             if (updateRes) {
               toast.success("Venda realizada com sucesso.");
               const userExists = await db.user

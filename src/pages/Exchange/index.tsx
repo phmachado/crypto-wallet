@@ -19,6 +19,7 @@ import AppLayout from "../../components/AppLayout";
 import { CurrentCryptoContext } from "../../contexts/CurrentCryptoContext";
 import { UserContext } from "../../contexts/UserContext";
 import { db } from "../../db";
+import { britaToBtc, btcToBrita } from "../../utils";
 
 export default function Exchange(): JSX.Element {
   const { currentUser, setCurrentUser } = useContext(UserContext);
@@ -28,31 +29,36 @@ export default function Exchange(): JSX.Element {
   const [isSwap, setIsSwap] = useState<boolean>(false);
   const [crypto, setCrypto] = useState<string[]>(["Bitcoin", "Brita"]);
 
-  // isSwap === true -> brita-bitcoin
-  // isSwap === false -> bitcoin-brita
+  // Função para lidar com a troca de crypto
   async function handleExchange() {
     try {
       let operation;
-      if (isSwap) {
-        operation = "brita-bitcoin";
-        if (
-          currentUser &&
-          currentUser.id &&
-          currentBtc &&
-          currentBrita &&
-          value
-        ) {
-          const britaInBtc = currentBrita / currentBtc; // 1 brita em btc
-          const currentBtcBalance = currentUser.btc;
-          const currentBritaBalance = currentUser.brita;
+      if (
+        currentUser &&
+        currentUser.id &&
+        currentBtc &&
+        currentBrita &&
+        value
+      ) {
+        const currentBtcBalance = currentUser.btc;
+        const currentBritaBalance = currentUser.brita;
+
+        if (isSwap) {
+          // Caso isSwap seja 'true' a operação será de troca de BTC por B$
+          operation = "brita-bitcoin";
+
+          // Calculo do valor de troca
+          const exchangeAmout = britaToBtc(value, currentBrita, currentBtc);
 
           if (value < 0) {
             toast.warning("O valor precisa ser maior do que 0.");
           } else if (value > currentBritaBalance) {
             toast.warning("O valor não pode ser maior do que seu saldo.");
           } else {
+            // Calculo dos novo valores de BTC e B$
             const newBritaBalance = currentBritaBalance - value;
-            const newBtcBalance = currentBtcBalance + value * britaInBtc;
+            const newBtcBalance = currentBtcBalance + exchangeAmout;
+            // Atualizando as informações do usuário
             const updateRes = await db.user.update(currentUser.id, {
               btc: newBtcBalance,
               brita: newBritaBalance,
@@ -66,6 +72,7 @@ export default function Exchange(): JSX.Element {
                 },
               ],
             });
+            // Atualizando o estado referente ao usuário logado
             if (updateRes) {
               toast.success("Troca realizada com sucesso.");
               const userExists = await db.user
@@ -80,28 +87,21 @@ export default function Exchange(): JSX.Element {
             console.log("EXCHANGE_SUCESSFUL");
           }
         } else {
-          toast.error("Erro ao trocar crypto.");
-        }
-      } else {
-        operation = "bitcoin-brita";
-        if (
-          currentUser &&
-          currentUser.id &&
-          currentBtc &&
-          currentBrita &&
-          value
-        ) {
-          const btcInBrita = currentBtc / currentBrita; // 1 btc em brita
-          const currentBtcBalance = currentUser.btc;
-          const currentBritaBalance = currentUser.brita;
+          // Caso isSwap seja 'false' a operação será de troca de B$ por BTC
+          operation = "bitcoin-brita";
+
+          // Calculo do valor de troca
+          const exchangeAmout = btcToBrita(value, currentBrita, currentBtc);
 
           if (value < 0) {
             toast.warning("O valor precisa ser maior do que 0.");
           } else if (value > currentBtcBalance) {
             toast.warning("O valor não pode ser maior do que seu saldo.");
           } else {
+            // Calculo dos novo valores de BTC e B$
             const newBtcBalance = currentBtcBalance - value;
-            const newBritaBalance = currentBritaBalance + value * btcInBrita;
+            const newBritaBalance = currentBritaBalance + exchangeAmout;
+            // Atualizando as informações do usuário
             const updateRes = await db.user.update(currentUser.id, {
               btc: newBtcBalance,
               brita: newBritaBalance,
@@ -115,6 +115,7 @@ export default function Exchange(): JSX.Element {
                 },
               ],
             });
+            // Atualizando o estado referente ao usuário logado
             if (updateRes) {
               toast.success("Troca realizada com sucesso.");
               const userExists = await db.user
@@ -128,9 +129,9 @@ export default function Exchange(): JSX.Element {
             }
             console.log("EXCHANGE_SUCESSFUL");
           }
-        } else {
-          toast.error("Erro ao trocar crypto.");
         }
+      } else {
+        toast.error("Erro ao trocar crypto.");
       }
     } catch (err) {
       console.log(err);
