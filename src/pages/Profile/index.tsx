@@ -54,6 +54,7 @@ export default function Profile(): JSX.Element {
           password: hashedPassword,
         });
         if (updateRes) {
+          toast.success("Usuário atualizado com sucesso.");
           const userExists = await db.user
             .where({ email: currentUser.email })
             .toArray();
