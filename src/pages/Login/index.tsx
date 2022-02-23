@@ -1,5 +1,5 @@
 import { Button, Box, TextField, Link } from "@mui/material";
-import { useState, useContext } from "react";
+import CryptoJS from "crypto-js";
 import { useNavigate } from "react-router-dom";
 
 import CredentialsLayout from "../../components/CredentialsLayout";
@@ -15,13 +15,26 @@ export default function Login(): JSX.Element {
 
   async function handleLogin() {
     try {
-      const userExists = await db.user.where({ email, password }).toArray();
-      if (userExists.length) {
-        setCurrentUser(userExists[0]);
-        localStorage.setItem("currentUser", userExists[0].email);
-        navigate("/dashboard");
+      const userGivenEmail = await db.user.where({ email }).toArray();
+      if (userGivenEmail.length) {
+        const bytes = CryptoJS.AES.decrypt(
+          userGivenEmail[0].password,
+          "secret"
+        );
+        const originalText = bytes.toString(CryptoJS.enc.Utf8);
+        if (originalText === password) {
+          setCurrentUser(userGivenEmail[0]);
+          localStorage.setItem("currentUser", userGivenEmail[0].email);
+          const dummyToken = localStorage.getItem("dummyToken");
+          if (!dummyToken || dummyToken === "remove-access") {
+            localStorage.setItem("dummyToken", "grant-access");
+          }
+          navigate("/dashboard");
+        } else {
+          console.log("INCORRECT_PASSWORD_OR_EMAIL");
+        }
       } else {
-        console.log("INCORRECT_OR_DONT_EXIST");
+        console.log("INCORRECT_PASSWORD_OR_EMAIL");
       }
     } catch (err) {
       console.log(err);
