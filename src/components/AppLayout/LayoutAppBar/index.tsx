@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function LayoutAppBar() {
   const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleClick = (page: string) => {

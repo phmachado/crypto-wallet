@@ -27,7 +27,7 @@ export function CurrentCryptoContextProvider({ children }: Props): JSX.Element {
   const [brita, setBrita] = useState<number>();
   const [britaLastUpdate, setBritaLastUpdate] = useState<string>();
 
-  // Data a ser aplicada na url refrente ao valor da Brita
+  // Data a ser aplicada na url referente ao valor da Brita
   const britaQueryDate = format(subDays(new Date(), 2), "MM-dd-yyyy");
 
   // Salvando os valores atuais do BTC e Brita
