@@ -2,6 +2,8 @@ import { Button, TextField, Box } from "@mui/material";
 import CryptoJS from "crypto-js";
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import validator from "validator";
 
 import CredentialsLayout from "../../components/CredentialsLayout";
 import { UserContext } from "../../contexts/UserContext";
@@ -26,38 +28,55 @@ export default function SignUp(): JSX.Element {
   async function handleSignUp() {
     try {
       if (password !== checkPassword) {
-        console.log("PASSWORD_DONT_MATCH");
+        toast.warning("As senhas são diferentes.");
+      } else if (password.length < 6) {
+        toast.warning("A senha deve ter mais de 6 caracteres.");
+      } else if (!validator.isEmail(email)) {
+        toast.warning("O e-mail não é válido.");
+      } else if (!validator.isAlpha(name, "pt-BR")) {
+        toast.warning("O nome não é válido.");
       } else {
-        const hashedPassword = CryptoJS.AES.encrypt(
-          password,
-          "secret"
-        ).toString();
-        const newUser = await db.user.add({
-          name,
-          email,
-          password: hashedPassword,
-          real: 100000,
-          btc: 0,
-          brita: 0,
-          history: [],
-        });
-        if (newUser) {
-          const createdUser = await db.user
-            .where({ email, password: hashedPassword })
-            .toArray();
-          if (createdUser.length) {
-            setCurrentUser(createdUser[0]);
-            localStorage.setItem("currentUser", createdUser[0].email);
-            const dummyToken = localStorage.getItem("dummyToken");
-            if (!dummyToken || dummyToken === "remove-access") {
-              localStorage.setItem("dummyToken", "grant-access");
+        const emailRes = await db.user.where({ email }).toArray();
+        if (emailRes.length) {
+          toast.warning("E-mail já cadastrado.");
+        } else {
+          const hashedPassword = CryptoJS.AES.encrypt(
+            password,
+            "secret"
+          ).toString();
+          const newUser = await db.user.add({
+            name,
+            email,
+            password: hashedPassword,
+            real: 100000,
+            btc: 0,
+            brita: 0,
+            history: [],
+          });
+          if (newUser) {
+            const createdUser = await db.user
+              .where({ email, password: hashedPassword })
+              .toArray();
+            if (createdUser.length) {
+              setCurrentUser(createdUser[0]);
+              localStorage.setItem("currentUser", createdUser[0].email);
+              const dummyToken = localStorage.getItem("dummyToken");
+              if (!dummyToken || dummyToken === "remove-access") {
+                localStorage.setItem("dummyToken", "grant-access");
+              }
+              navigate("/dashboard");
+              toast.success("Usuário cadastrado com sucesso.");
+            } else {
+              toast.error("Erro ao cadastrar usuário.");
             }
-            navigate("/dashboard");
+          } else {
+            toast.error("Erro ao cadastrar usuário.");
           }
         }
       }
     } catch (err) {
       console.log(err);
+      toast.error("Erro ao cadastrar usuário.");
     }
   }
 
