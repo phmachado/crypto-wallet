@@ -13,6 +13,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { useState, useContext } from "react";
+import { toast } from "react-toastify";
 
 import AppLayout from "../../components/AppLayout";
 import { CurrentCryptoContext } from "../../contexts/CurrentCryptoContext";
@@ -30,91 +31,110 @@ export default function Exchange(): JSX.Element {
   // isSwap === true -> brita-bitcoin
   // isSwap === false -> bitcoin-brita
   async function handleExchange() {
-    let operation;
-    if (isSwap) {
-      operation = "brita-bitcoin";
-      if (
-        currentUser &&
-        currentUser.id &&
-        currentBtc &&
-        currentBrita &&
-        value
-      ) {
-        const britaInBtc = currentBrita / currentBtc; // 1 brita em btc
-        const currentBtcBalance = currentUser.btc;
-        const currentBritaBalance = currentUser.brita;
+    try {
+      let operation;
+      if (isSwap) {
+        operation = "brita-bitcoin";
+        if (
+          currentUser &&
+          currentUser.id &&
+          currentBtc &&
+          currentBrita &&
+          value
+        ) {
+          const britaInBtc = currentBrita / currentBtc; // 1 brita em btc
+          const currentBtcBalance = currentUser.btc;
+          const currentBritaBalance = currentUser.brita;
 
-        if (value > currentBritaBalance) {
-          console.log("INVLAID_OPERATION");
-        } else {
-          const newBritaBalance = currentBritaBalance - value;
-          const newBtcBalance = currentBtcBalance + value * britaInBtc;
-          const updateRes = await db.user.update(currentUser.id, {
-            btc: newBtcBalance,
-            brita: newBritaBalance,
-            history: [
-              ...currentUser.history,
-              {
-                id: new Date(),
-                date: new Date(),
-                operation: `exchange-${operation}`,
-                value,
-              },
-            ],
-          });
-          if (updateRes) {
-            const userExists = await db.user
-              .where({ email: currentUser.email })
-              .toArray();
-            if (userExists.length) {
-              setCurrentUser(userExists[0]);
+          if (value < 0) {
+            toast.warning("O valor precisa ser maior do que 0.");
+          } else if (value > currentBritaBalance) {
+            toast.warning("O valor não pode ser maior do que seu saldo.");
+          } else {
+            const newBritaBalance = currentBritaBalance - value;
+            const newBtcBalance = currentBtcBalance + value * britaInBtc;
+            const updateRes = await db.user.update(currentUser.id, {
+              btc: newBtcBalance,
+              brita: newBritaBalance,
+              history: [
+                ...currentUser.history,
+                {
+                  id: new Date(),
+                  date: new Date(),
+                  operation: `exchange-${operation}`,
+                  value,
+                },
+              ],
+            });
+            if (updateRes) {
+              toast.success("Troca realizada com sucesso.");
+              const userExists = await db.user
+                .where({ email: currentUser.email })
+                .toArray();
+              if (userExists.length) {
+                setCurrentUser(userExists[0]);
+              }
+            } else {
+              toast.error("Erro ao trocar crypto.");
             }
+            console.log("EXCHANGE_SUCESSFUL");
           }
-          console.log("EXCHANGE_SUCESSFUL");
+        } else {
+          toast.error("Erro ao trocar crypto.");
+        }
+      } else {
+        operation = "bitcoin-brita";
+        if (
+          currentUser &&
+          currentUser.id &&
+          currentBtc &&
+          currentBrita &&
+          value
+        ) {
+          const btcInBrita = currentBtc / currentBrita; // 1 btc em brita
+          const currentBtcBalance = currentUser.btc;
+          const currentBritaBalance = currentUser.brita;
+
+          if (value < 0) {
+            toast.warning("O valor precisa ser maior do que 0.");
+          } else if (value > currentBtcBalance) {
+            toast.warning("O valor não pode ser maior do que seu saldo.");
+          } else {
+            const newBtcBalance = currentBtcBalance - value;
+            const newBritaBalance = currentBritaBalance + value * btcInBrita;
+            const updateRes = await db.user.update(currentUser.id, {
+              btc: newBtcBalance,
+              brita: newBritaBalance,
+              history: [
+                ...currentUser.history,
+                {
+                  id: new Date(),
+                  date: new Date(),
+                  operation: `exchange-${operation}`,
+                  value,
+                },
+              ],
+            });
+            if (updateRes) {
+              toast.success("Troca realizada com sucesso.");
+              const userExists = await db.user
+                .where({ email: currentUser.email })
+                .toArray();
+              if (userExists.length) {
+                setCurrentUser(userExists[0]);
+              }
+            } else {
+              toast.error("Erro ao trocar crypto.");
+            }
+            console.log("EXCHANGE_SUCESSFUL");
+          }
+        } else {
+          toast.error("Erro ao trocar crypto.");
         }
       }
-    } else {
-      operation = "bitcoin-brita";
-      if (
-        currentUser &&
-        currentUser.id &&
-        currentBtc &&
-        currentBrita &&
-        value
-      ) {
-        const btcInBrita = currentBtc / currentBrita; // 1 btc em brita
-        const currentBtcBalance = currentUser.btc;
-        const currentBritaBalance = currentUser.brita;
-
-        if (value > currentBtcBalance) {
-          console.log("INVLAID_OPERATION");
-        } else {
-          const newBtcBalance = currentBtcBalance - value;
-          const newBritaBalance = currentBritaBalance + value * btcInBrita;
-          const updateRes = await db.user.update(currentUser.id, {
-            btc: newBtcBalance,
-            brita: newBritaBalance,
-            history: [
-              ...currentUser.history,
-              {
-                id: new Date(),
-                date: new Date(),
-                operation: `exchange-${operation}`,
-                value,
-              },
-            ],
-          });
-          if (updateRes) {
-            const userExists = await db.user
-              .where({ email: currentUser.email })
-              .toArray();
-            if (userExists.length) {
-              setCurrentUser(userExists[0]);
-            }
-          }
-          console.log("EXCHANGE_SUCESSFUL");
-        }
-      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Erro ao trocar crypto.");
     }
   }
 
