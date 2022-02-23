@@ -2,7 +2,7 @@ import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { BrowserRouter } from "react-router-dom";
 
-import { DashboardContextProvider } from "./contexts/DashboardContext";
+import { CurrentCryptoContextProvider } from "./contexts/CurrentCryptoContext";
 import { UserContextProvider } from "./contexts/UserContext";
 import AppRoutes from "./routes";
 
@@ -20,9 +20,9 @@ function App(): JSX.Element {
       <CssBaseline />
       <BrowserRouter>
         <UserContextProvider>
-          <DashboardContextProvider>
+          <CurrentCryptoContextProvider>
             <AppRoutes />
-          </DashboardContextProvider>
+          </CurrentCryptoContextProvider>
         </UserContextProvider>
       </BrowserRouter>
     </ThemeProvider>
