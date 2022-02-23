@@ -12,18 +12,91 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import AppLayout from "../../components/AppLayout";
+import { CurrentCryptoContext } from "../../contexts/CurrentCryptoContext";
+import { UserContext } from "../../contexts/UserContext";
+import { db } from "../../db";
 
 export default function Exchange(): JSX.Element {
+  const { currentUser, setCurrentUser } = useContext(UserContext);
+  const { currentBtc, currentBrita } = useContext(CurrentCryptoContext);
+
   const [value, setValue] = useState<number>();
   const [isSwap, setIsSwap] = useState<boolean>(false);
   const [crypto, setCrypto] = useState<string[]>(["Bitcoin", "Brita"]);
+  // isSwap === true -> brita-bitcoin
+  // isSwap === false -> bitcoin-brita
+  async function handleExchange() {
+    let operation;
+    if (isSwap) {
+      operation = "brita-bitcoin";
+      if (
+        currentUser &&
+        currentUser.id &&
+        currentBtc &&
+        currentBrita &&
+        value
+      ) {
+        const britaInBtc = currentBrita / currentBtc; // 1 brita em btc
+        const currentBtcBalance = currentUser.btc;
+        const currentBritaBalance = currentUser.brita;
 
-  function handleExchange(): void {
-    console.log(isSwap ? "brita-bitcoin" : "bitcoin-brita");
-    console.log(value);
+        if (value > currentBritaBalance) {
+          console.log("INVLAID_OPERATION");
+        } else {
+          const newBritaBalance = currentBritaBalance - value;
+          const newBtcBalance = currentBtcBalance + value * britaInBtc;
+          const updateRes = await db.user.update(currentUser.id, {
+            btc: newBtcBalance,
+            brita: newBritaBalance,
+          });
+          if (updateRes) {
+            const userExists = await db.user
+              .where({ email: currentUser.email })
+              .toArray();
+            if (userExists.length) {
+              setCurrentUser(userExists[0]);
+            }
+          }
+          console.log("EXCHANGE_SUCESSFUL");
+        }
+      }
+    } else {
+      operation = "bitcoin-brita";
+      if (
+        currentUser &&
+        currentUser.id &&
+        currentBtc &&
+        currentBrita &&
+        value
+      ) {
+        const btcInBrita = currentBtc / currentBrita; // 1 btc em brita
+        const currentBtcBalance = currentUser.btc;
+        const currentBritaBalance = currentUser.brita;
+
+        if (value > currentBtcBalance) {
+          console.log("INVLAID_OPERATION");
+        } else {
+          const newBtcBalance = currentBtcBalance - value;
+          const newBritaBalance = currentBritaBalance + value * btcInBrita;
+          const updateRes = await db.user.update(currentUser.id, {
+            btc: newBtcBalance,
+            brita: newBritaBalance,
+          });
+          if (updateRes) {
+            const userExists = await db.user
+              .where({ email: currentUser.email })
+              .toArray();
+            if (userExists.length) {
+              setCurrentUser(userExists[0]);
+            }
+          }
+          console.log("EXCHANGE_SUCESSFUL");
+        }
+      }
+    }
   }
 
   return (
