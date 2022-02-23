@@ -31,8 +31,8 @@ export default function Profile(): JSX.Element {
 
   async function handleUpdateUser() {
     try {
-      if (currentUser) {
-        await db.user.update(Number(currentUser.id), {
+      if (currentUser && currentUser.id) {
+        await db.user.update(currentUser.id, {
           name,
           email,
           password,
