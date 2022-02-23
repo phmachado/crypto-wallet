@@ -24,7 +24,9 @@ export default function SignUp(): JSX.Element {
           name,
           email,
           password,
-          balance: 100000,
+          real: 100000,
+          btc: 0,
+          brita: 0,
           history: [],
         });
         if (newUser) {
