@@ -33,3 +33,21 @@ export function btcToReal(btc: number, currentBtcInReal: number): number {
 export function britaToReal(brita: number, currentBritaInReal: number): number {
   return brita * currentBritaInReal;
 }
+
+// Função que retorna o valor B$ em BTC
+export function britaToBtc(
+  brita: number,
+  currentBrita: number,
+  currentBtc: number
+): number {
+  return brita * (currentBrita / currentBtc);
+}
+
+// Função que retorna o valor BTC em B$
+export function btcToBrita(
+  btc: number,
+  currentBrita: number,
+  currentBtc: number
+): number {
+  return btc * (currentBtc / currentBrita);
+}
