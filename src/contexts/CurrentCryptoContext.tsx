@@ -1,7 +1,8 @@
-/* eslint-disable react/jsx-no-constructed-context-values */
 import axios from "axios";
 import { format, subDays } from "date-fns";
-import { createContext, ReactNode, useState, useEffect } from "react";
+import { createContext, ReactNode, useState, useEffect, useMemo } from "react";
+
+import { CURRENT_BTC, CURRENT_BRITA } from "../utils";
 
 type Props = {
   children: ReactNode;
@@ -20,46 +21,53 @@ export const CurrentCryptoContext = createContext(
   initialValue as CurrentCryptoContextType
 );
 
-export function CurrentCryptoContextProvider({ children }: Props) {
+export function CurrentCryptoContextProvider({ children }: Props): JSX.Element {
   const [btc, setBtc] = useState<number>();
   const [btcLastUpdate, setBtcLastUpdate] = useState<number>();
   const [brita, setBrita] = useState<number>();
   const [britaLastUpdate, setBritaLastUpdate] = useState<string>();
 
-  const queryDate = format(subDays(new Date(), 2), "MM-dd-yyyy");
+  // Data a ser aplicada na url refrente ao valor da Brita
+  const britaQueryDate = format(subDays(new Date(), 2), "MM-dd-yyyy");
 
+  // Salvando os valores atuais do BTC e Brita
   useEffect(() => {
     async function getBtc() {
-      await axios
-        .get("https://www.mercadobitcoin.net/api/BTC/ticker/")
-        .then((res) => {
+      try {
+        await axios.get(CURRENT_BTC).then((res) => {
           setBtc(Number(res.data.ticker.last));
           setBtcLastUpdate(res.data.ticker.date);
         });
+      } catch (err) {
+        console.log(err);
+      }
     }
     async function getBrita() {
-      await axios
-        .get(
-          `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${queryDate}'&$top=100&$format=json`
-        )
-        .then((res) => {
+      try {
+        await axios.get(CURRENT_BRITA(britaQueryDate)).then((res) => {
           setBrita(res.data.value[0].cotacaoCompra);
           setBritaLastUpdate(res.data.value[0].dataHoraCotacao);
         });
+      } catch (err) {
+        console.log(err);
+      }
     }
     getBtc();
     getBrita();
   }, []);
 
+  const value = useMemo(
+    () => ({
+      currentBtc: btc,
+      btcLastUpdate,
+      currentBrita: brita,
+      britaLastUpdate,
+    }),
+    [btc, brita, btcLastUpdate, britaLastUpdate]
+  );
+
   return (
-    <CurrentCryptoContext.Provider
-      value={{
-        currentBtc: btc,
-        btcLastUpdate,
-        currentBrita: brita,
-        britaLastUpdate,
-      }}
-    >
+    <CurrentCryptoContext.Provider value={value}>
       {children}
     </CurrentCryptoContext.Provider>
   );

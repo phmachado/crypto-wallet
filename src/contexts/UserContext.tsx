@@ -1,5 +1,4 @@
-/* eslint-disable react/jsx-no-constructed-context-values */
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useEffect, useMemo, useState } from "react";
 
 import { db, IUser } from "../db";
 
@@ -16,9 +15,10 @@ const initialValue = {};
 
 export const UserContext = createContext(initialValue as UserContextType);
 
-export function UserContextProvider({ children }: Props) {
+export function UserContextProvider({ children }: Props): JSX.Element {
   const [currentUser, setCurrentUser] = useState<IUser>();
 
+  // Salvando as informações do usuário logado
   useEffect(() => {
     async function fetchCurrentUser() {
       try {
@@ -32,14 +32,13 @@ export function UserContextProvider({ children }: Props) {
     fetchCurrentUser();
   }, []);
 
-  return (
-    <UserContext.Provider
-      value={{
-        currentUser,
-        setCurrentUser,
-      }}
-    >
-      {children}
-    </UserContext.Provider>
+  const value = useMemo(
+    () => ({
+      currentUser,
+      setCurrentUser,
+    }),
+    [currentUser, setCurrentUser]
   );
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }

@@ -15,13 +15,6 @@ export default function LayoutAppBar() {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   const handleClick = (page: string) => {
     if (page === "perfil") {
       navigate("/perfil");
@@ -30,6 +23,7 @@ export default function LayoutAppBar() {
       navigate("/");
     }
   };
+
   return (
     <AppBar
       position="fixed"
@@ -41,7 +35,11 @@ export default function LayoutAppBar() {
         </Typography>
 
         <Box>
-          <IconButton size="large" onClick={handleMenu} color="inherit">
+          <IconButton
+            size="large"
+            onClick={(e) => setAnchorEl(e.currentTarget)}
+            color="inherit"
+          >
             <AccountCircle />
           </IconButton>
           <Menu
@@ -56,7 +54,7 @@ export default function LayoutAppBar() {
               horizontal: "right",
             }}
             open={Boolean(anchorEl)}
-            onClose={handleClose}
+            onClose={() => setAnchorEl(null)}
           >
             <MenuItem onClick={() => handleClick("perfil")}>Perfil</MenuItem>
             <MenuItem

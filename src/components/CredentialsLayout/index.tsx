@@ -1,11 +1,13 @@
 import { Box, Grid, Paper, Typography } from "@mui/material";
+import { ReactNode } from "react";
 
 import loginBg from "../../assets/login-bg.jpeg";
 
 type Props = {
-  children: JSX.Element | JSX.Element[];
+  children: ReactNode;
 };
 
+// Layout utilizado para as páginas de Login e Cadastro
 export default function CredentialsLayout({ children }: Props): JSX.Element {
   return (
     <Grid container sx={{ height: "100vh" }}>

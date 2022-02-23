@@ -1,12 +1,14 @@
 import { Toolbar, Box } from "@mui/material";
+import { ReactNode } from "react";
 
 import LayoutAppBar from "./LayoutAppBar";
 import LayoutDrawer from "./LayoutDrawer";
 
 type Props = {
-  children: JSX.Element | JSX.Element[];
+  children: ReactNode;
 };
 
+// Layout utilizado para o App
 export default function AppLayout({ children }: Props): JSX.Element {
   return (
     <Box sx={{ display: "flex" }}>

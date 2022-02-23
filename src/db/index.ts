@@ -13,6 +13,7 @@ export interface IUser {
     | [];
 }
 
+// Configuração do DB conforme documentação do Dexie
 export class AppDB extends Dexie {
   user!: Table<IUser, number>;
 

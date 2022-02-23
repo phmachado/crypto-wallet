@@ -8,6 +8,7 @@ import { UserContextProvider } from "./contexts/UserContext";
 import AppRoutes from "./routes";
 import "react-toastify/dist/ReactToastify.css";
 
+// Personalização do tema para o App
 const theme = createTheme({
   palette: {
     background: {

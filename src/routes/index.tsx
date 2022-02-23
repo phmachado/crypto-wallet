@@ -11,10 +11,11 @@ import Profile from "../pages/Profile";
 import Sell from "../pages/Sell";
 import SignUp from "../pages/SignUp";
 
-function AppRoutes() {
+function AppRoutes(): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Controle de acesso as rotas no App
   useEffect(() => {
     if (location.pathname !== "/cadastro") {
       const dummyToken = localStorage.getItem("dummyToken");

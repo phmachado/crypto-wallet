@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function LayoutAppBar() {
   const navigate = useNavigate();
+
   return (
     <Drawer
       variant="permanent"
