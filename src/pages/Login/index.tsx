@@ -1,5 +1,6 @@
-import { Button, Box, TextField, Link } from "@mui/material";
+import { Button, Box, TextField } from "@mui/material";
 import CryptoJS from "crypto-js";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import CredentialsLayout from "../../components/CredentialsLayout";
@@ -12,6 +13,13 @@ export default function Login(): JSX.Element {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  useEffect(() => {
+    const dummyToken = localStorage.getItem("dummyToken");
+    if (dummyToken && dummyToken !== "remove-access") {
+      navigate("/dashboard");
+    }
+  }, []);
 
   async function handleLogin() {
     try {
@@ -83,9 +91,14 @@ export default function Login(): JSX.Element {
           width: "100%",
         }}
       >
-        <Link href="/cadastro" variant="body2">
+        <Button
+          size="small"
+          onClick={() => {
+            navigate("/cadastro");
+          }}
+        >
           Não tem cadastro? Cadastre-se
-        </Link>
+        </Button>
       </Box>
     </CredentialsLayout>
   );

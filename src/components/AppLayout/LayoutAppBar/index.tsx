@@ -26,6 +26,7 @@ export default function LayoutAppBar() {
     if (page === "perfil") {
       navigate("/perfil");
     } else {
+      localStorage.setItem("dummyToken", "remove-access");
       navigate("/");
     }
   };
