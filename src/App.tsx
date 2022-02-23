@@ -13,6 +13,9 @@ const theme = createTheme({
     background: {
       default: grey[100],
     },
+    primary: {
+      main: "#00A868",
+    },
   },
 });
 
