@@ -12,9 +12,11 @@ export default function Login(): JSX.Element {
   const { currentUser, setCurrentUser } = useContext(UserContext);
 
   const navigate = useNavigate();
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  // Controle de acesso as rotas no App
   useEffect(() => {
     const dummyToken = localStorage.getItem("dummyToken");
     if (dummyToken && dummyToken !== "remove-access") {
@@ -22,16 +24,20 @@ export default function Login(): JSX.Element {
     }
   }, []);
 
+  // Função para lidar com o login do usuário
   async function handleLogin() {
     try {
+      // Verificando se o email existe no DB
       const userGivenEmail = await db.user.where({ email }).toArray();
       if (userGivenEmail.length) {
+        // Comparando a senha digitada com a senha salva no DB com os tratamentos referentes a hash
         const bytes = CryptoJS.AES.decrypt(
           userGivenEmail[0].password,
           "secret"
         );
         const originalText = bytes.toString(CryptoJS.enc.Utf8);
         if (originalText === password) {
+          // Atualizando o estado do usuário logado e tratamento do token de acesso
           setCurrentUser(userGivenEmail[0]);
           localStorage.setItem("currentUser", userGivenEmail[0].email);
           const dummyToken = localStorage.getItem("dummyToken");

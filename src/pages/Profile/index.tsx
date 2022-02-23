@@ -25,16 +25,19 @@ export default function Profile(): JSX.Element {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  // Preenchendo os valores iniciais
   useEffect(() => {
     if (currentUser) {
       setName(currentUser.name);
       setEmail(currentUser.email);
+      // Tratamento referente a hash da senha
       const bytes = CryptoJS.AES.decrypt(currentUser.password, "secret");
       const originalText = bytes.toString(CryptoJS.enc.Utf8);
       setPassword(originalText);
     }
   }, [currentUser]);
 
+  // Função para lidar com a atualização do usuário
   async function handleUpdateUser() {
     try {
       if (password.length < 6) {
@@ -44,10 +47,12 @@ export default function Profile(): JSX.Element {
       } else if (!validator.isAlpha(name, "pt-BR")) {
         toast.warning("O nome não é válido.");
       } else if (currentUser && currentUser.id) {
+        // Fazendo o hash da senha
         const hashedPassword = CryptoJS.AES.encrypt(
           password,
           "secret"
         ).toString();
+        // Atualizando o usuário no DB
         const updateRes = await db.user.update(currentUser.id, {
           name,
           email,
@@ -59,6 +64,7 @@ export default function Profile(): JSX.Element {
             .where({ email: currentUser.email })
             .toArray();
           if (userExists.length) {
+            // Atualizando o estado do usuário logado
             setCurrentUser(userExists[0]);
           } else {
             toast.error("Erro ao atualizar usuário.");

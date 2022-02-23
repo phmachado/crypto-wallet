@@ -12,12 +12,14 @@ import { db } from "../../db";
 export default function SignUp(): JSX.Element {
   const { setCurrentUser } = useContext(UserContext);
 
+  const navigate = useNavigate();
+
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [checkPassword, setCheckPassword] = useState<string>("");
-  const navigate = useNavigate();
 
+  // Controle de acesso as rotas no App
   useEffect(() => {
     const dummyToken = localStorage.getItem("dummyToken");
     if (dummyToken && dummyToken !== "remove-access") {
@@ -25,6 +27,7 @@ export default function SignUp(): JSX.Element {
     }
   }, []);
 
+  // Função para lidar com a criação do usuário
   async function handleSignUp() {
     try {
       if (password !== checkPassword) {
@@ -36,14 +39,17 @@ export default function SignUp(): JSX.Element {
       } else if (!validator.isAlpha(name, "pt-BR")) {
         toast.warning("O nome não é válido.");
       } else {
+        // Verificando se o e-mail já é utilizado
         const emailRes = await db.user.where({ email }).toArray();
         if (emailRes.length) {
           toast.warning("E-mail já cadastrado.");
         } else {
+          // Fazendo o hash da senha para não salvar em plain text
           const hashedPassword = CryptoJS.AES.encrypt(
             password,
             "secret"
           ).toString();
+          // Salvando o usuário no DB
           const newUser = await db.user.add({
             name,
             email,
@@ -54,6 +60,7 @@ export default function SignUp(): JSX.Element {
             history: [],
           });
           if (newUser) {
+            // Atualizando o estado referente ao usuário logado e tratamento do token de acesso
             const createdUser = await db.user
               .where({ email, password: hashedPassword })
               .toArray();

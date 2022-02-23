@@ -15,6 +15,7 @@ export default function CurrencyToday({
   value,
   lastUpdate,
 }: Props): JSX.Element {
+  // Formatando a data de atualização de acordo com a crypto
   const lasUpdateDate =
     currency === "Bitcoin"
       ? format(new Date(Number(lastUpdate) * 1000), "dd/MM/yyyy 'às' HH'h'mm")
