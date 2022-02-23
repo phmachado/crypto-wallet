@@ -8,7 +8,9 @@ export interface IUser {
   real: number;
   btc: number;
   brita: number;
-  history: { date: string; operation: string; value: number }[] | [];
+  history:
+    | { id: string; date: string; operation: string; value: number }[]
+    | [];
 }
 
 export class AppDB extends Dexie {
