@@ -12,69 +12,76 @@ import {
   RadioGroup,
   Radio,
 } from "@mui/material";
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 
 import AppLayout from "../../components/AppLayout";
-import { DashboardContext } from "../../contexts/DashboardContext";
+import { CurrentCryptoContext } from "../../contexts/CurrentCryptoContext";
 import { UserContext } from "../../contexts/UserContext";
 import { db } from "../../db";
+import { btcToReal, britaToReal } from "../../utils";
 
 export default function Sell(): JSX.Element {
-  const { btc, brita, realToBtc, realToBrita, setBalance } =
-    useContext(DashboardContext);
   const { currentUser, setCurrentUser } = useContext(UserContext);
+  const { currentBtc, currentBrita } = useContext(CurrentCryptoContext);
 
   const [crypto, setCrypto] = useState<string>("bitcoin");
   const [value, setValue] = useState<number>();
 
-  function btcToReal(value: number) {
-    return value * Number(btc);
-  }
+  async function handleSell() {
+    if (currentUser && currentUser.id) {
+      const currentRealBalance = currentUser.real;
+      const currentBtcBalance = currentUser.btc;
+      const currentBritaBalance = currentUser.brita;
 
-  function britaToReal(value: number) {
-    return value * Number(brita);
-  }
+      if (crypto === "bitcoin" && currentBtc && value) {
+        const sellAmount = btcToReal(value, currentBtc);
 
-  async function updateBalance(newBalance: number) {
-    try {
-      if (currentUser) {
-        const updateRes = await db.user.update(Number(currentUser.id), {
-          balance: newBalance,
-          history: [
-            ...currentUser.history,
-            { date: new Date(), operation: `sell-${crypto}`, value },
-          ],
-        });
-        if (updateRes) {
-          const currentUserEmail = localStorage.getItem("currentUser");
-          const user = await db.user
-            .where({ email: currentUserEmail })
-            .toArray();
-          setCurrentUser(user[0]);
-          setBalance(user[0].balance);
+        if (value > currentBtcBalance) {
+          console.log("INVALID_OPERATION");
+        } else {
+          const newBtcBalance = currentBtcBalance - value;
+          const newRealBalance = currentRealBalance + sellAmount;
+          const updateRes = await db.user.update(currentUser.id, {
+            real: newRealBalance,
+            btc: newBtcBalance,
+          });
+          if (updateRes) {
+            const userExists = await db.user
+              .where({ email: currentUser.email })
+              .toArray();
+            if (userExists.length) {
+              setCurrentUser(userExists[0]);
+            }
+          }
+          console.log("SELL_SUCESSFUL");
         }
       }
-    } catch (err) {
-      console.log(err);
-    }
-  }
 
-  function handleSell(): void {
-    if (currentUser && value) {
-      const newBalance =
-        currentUser.balance -
-        (crypto === "bitcoin" ? btcToReal(value) : britaToReal(value));
-      if (newBalance < 0) {
-        console.log("PROVIDE_VALID_VALUE");
-      } else {
-        updateBalance(newBalance);
+      if (crypto === "brita" && currentBrita && value) {
+        const sellAmount = britaToReal(value, currentBrita);
+
+        if (value > currentBritaBalance) {
+          console.log("INVALID_OPERATION");
+        } else {
+          const newBritaBalance = currentBritaBalance - value;
+          const newRealBalance = currentRealBalance + sellAmount;
+          const updateRes = await db.user.update(currentUser.id, {
+            real: newRealBalance,
+            brita: newBritaBalance,
+          });
+          if (updateRes) {
+            const userExists = await db.user
+              .where({ email: currentUser.email })
+              .toArray();
+            if (userExists.length) {
+              setCurrentUser(userExists[0]);
+            }
+          }
+          console.log("SELL_SUCESSFUL");
+        }
       }
     }
   }
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCrypto((event.target as HTMLInputElement).value);
-  };
 
   return (
     <AppLayout>
@@ -98,7 +105,10 @@ export default function Sell(): JSX.Element {
                 Selecione a criptomoeda que deseja vender:
               </Typography>
               <FormControl sx={{ marginBottom: 2 }}>
-                <RadioGroup value={crypto} onChange={handleChange}>
+                <RadioGroup
+                  value={crypto}
+                  onChange={(e) => setCrypto(e.target.value)}
+                >
                   <FormControlLabel
                     value="bitcoin"
                     label="Bitcoin"
@@ -124,30 +134,7 @@ export default function Sell(): JSX.Element {
                 placeholder="Digite o valor"
                 onChange={(e) => setValue(Number(e.target.value))}
               />
-              <Typography variant="caption" sx={{ p: 1 }}>
-                {crypto === "bitcoin" ? (
-                  <>
-                    Seu saldo em Bitcoin é de{" "}
-                    {currentUser
-                      ? realToBtc(currentUser.balance).toFixed(8)
-                      : "Carregando"}{" "}
-                    BTC
-                  </>
-                ) : (
-                  <>
-                    Seu saldo em Brita é de B${" "}
-                    {currentUser
-                      ? realToBrita(currentUser.balance).toLocaleString(
-                          "pt-BR",
-                          {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          }
-                        )
-                      : "Carregando"}{" "}
-                  </>
-                )}
-              </Typography>
+
               <Button
                 disabled={!value}
                 variant="contained"
