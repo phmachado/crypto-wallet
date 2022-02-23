@@ -3,13 +3,13 @@ import { Container, Grid, Paper, Typography, Box } from "@mui/material";
 import { useContext } from "react";
 
 import AppLayout from "../../components/AppLayout";
-import { DashboardContext } from "../../contexts/DashboardContext";
+import { CurrentCryptoContext } from "../../contexts/CurrentCryptoContext";
 import Balance from "./components/Balance";
 import CurrencyToday from "./components/CurrencyToday";
 
 export default function Dashboard(): JSX.Element {
-  const { btc, btcLastUpdate, brita, britaLastUpdate, balance } =
-    useContext(DashboardContext);
+  const { currentBtc, btcLastUpdate, currentBrita, britaLastUpdate } =
+    useContext(CurrentCryptoContext);
 
   return (
     <AppLayout>
@@ -41,7 +41,7 @@ export default function Dashboard(): JSX.Element {
             >
               <CurrencyToday
                 currency="Bitcoin"
-                value={btc}
+                value={currentBtc}
                 lastUpdate={btcLastUpdate}
               />
             </Paper>
@@ -56,7 +56,7 @@ export default function Dashboard(): JSX.Element {
             >
               <CurrencyToday
                 currency="Brita"
-                value={brita}
+                value={currentBrita}
                 lastUpdate={britaLastUpdate}
               />
             </Paper>
