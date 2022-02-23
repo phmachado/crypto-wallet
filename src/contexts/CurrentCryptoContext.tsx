@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import axios from "axios";
-import { format, subDays, isSaturday, isSunday } from "date-fns";
+import { format, subDays } from "date-fns";
 import { createContext, ReactNode, useState, useEffect } from "react";
 
 type Props = {
@@ -26,15 +26,7 @@ export function CurrentCryptoContextProvider({ children }: Props) {
   const [brita, setBrita] = useState<number>();
   const [britaLastUpdate, setBritaLastUpdate] = useState<string>();
 
-  let queryDate = "";
-  if (isSaturday(new Date())) {
-    queryDate = format(subDays(new Date(), 1), "MM-dd-yyyy");
-  }
-  if (isSunday(new Date())) {
-    queryDate = format(subDays(new Date(), 2), "MM-dd-yyyy");
-  } else {
-    queryDate = format(new Date(), "MM-dd-yyyy");
-  }
+  const queryDate = format(subDays(new Date(), 2), "MM-dd-yyyy");
 
   useEffect(() => {
     async function getBtc() {
