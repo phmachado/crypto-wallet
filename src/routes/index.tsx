@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
 import Buy from "../pages/Buy";
 import Dashboard from "../pages/Dashboard";
@@ -11,6 +12,18 @@ import Sell from "../pages/Sell";
 import SignUp from "../pages/SignUp";
 
 function AppRoutes() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname !== "/cadastro") {
+      const dummyToken = localStorage.getItem("dummyToken");
+      if (!dummyToken || dummyToken === "remove-access") {
+        navigate("/");
+      }
+    }
+  }, [location.pathname]);
+
   return (
     <Routes>
       <Route path="/" element={<Login />} />
