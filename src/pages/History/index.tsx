@@ -68,16 +68,30 @@ export default function History(): JSX.Element {
               }}
             >
               {currentUser ? (
-                <Box sx={{ height: 400, width: "100%" }}>
-                  <DataGrid
-                    rows={currentUser.history}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    disableSelectionOnClick
-                    disableColumnSelector
-                    disableColumnMenu
-                  />
+                <Box
+                  sx={{
+                    height: 400,
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {currentUser.history.length ? (
+                    <DataGrid
+                      rows={currentUser.history}
+                      columns={columns}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                      disableSelectionOnClick
+                      disableColumnSelector
+                      disableColumnMenu
+                    />
+                  ) : (
+                    <Typography variant="h6">
+                      Você ainda não fez transações.
+                    </Typography>
+                  )}
                 </Box>
               ) : (
                 <Loading />
