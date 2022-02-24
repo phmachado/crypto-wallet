@@ -1,46 +1,38 @@
-# Getting Started with Create React App
+# CryptoWallet
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+CryptoWallet é um Web App que funciona como uma carteira virtual de Reais (R$), Bitcoins (BTC) e Britas (B$) (criptomoeda equivalente ao dólar). 
 
-## Available Scripts
+No App, o usuário pode vender, comprar ou trocar suas cryptos e consultar um histórico de todas as operações financeiras realizadas, além de ter uma visão geral do seu patrimônio e dos valores atuais do BTC e B$. 
 
-In the project directory, you can run:
+São utilizadas as APIs do [Mercado Bitcoin](https://www.mercadobitcoin.net/api/BTC/ticker/) e do [Banco Central](https://dadosabertos.bcb.gov.br/dataset/taxas-de-cambio-todos-os-boletins-diarios) para consultar as cotações atuais.
 
-### `yarn start`
+## Instalação
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Você pode utilizar essa aplicação baixando ou clonando esse repositório, depois disso, deve navegar até a pasta do projeto e executar um dos comandos abaixo, de acordo com seu gerenciador de pacotes preferido, para instalar as dependências.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Com npm:
+```
+npm install
+```
 
-### `yarn test`
+Com Yarn:
+```
+yarn
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Utilização
 
-### `yarn build`
+Após a instalação dos pacotes, para rodar o App você deve executar um dos comandos abaixo, de acordo com seu gerenciador de pacotes preferido.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Com npm:
+```
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Com Yarn:
+```
+yarn start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Licença
+[MIT](https://choosealicense.com/licenses/mit/)
