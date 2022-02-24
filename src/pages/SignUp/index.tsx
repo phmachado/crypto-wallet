@@ -36,7 +36,7 @@ export default function SignUp(): JSX.Element {
         toast.warning("A senha deve ter mais de 6 caracteres.");
       } else if (!validator.isEmail(email)) {
         toast.warning("O e-mail não é válido.");
-      } else if (!validator.isAlpha(name, "pt-BR")) {
+      } else if (!validator.isAlpha(name, "pt-BR", { ignore: " " })) {
         toast.warning("O nome não é válido.");
       } else {
         // Verificando se o e-mail já é utilizado
