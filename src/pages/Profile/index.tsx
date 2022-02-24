@@ -60,11 +60,11 @@ export default function Profile(): JSX.Element {
         });
         if (updateRes) {
           toast.success("Usuário atualizado com sucesso.");
-          const userExists = await db.user
-            .where({ email: currentUser.email })
-            .toArray();
+          const userExists = await db.user.where({ email }).toArray();
+          console.log(userExists);
           if (userExists.length) {
             // Atualizando o estado do usuário logado
+            localStorage.setItem("currentUser", email);
             setCurrentUser(userExists[0]);
           } else {
             toast.error("Erro ao atualizar usuário.");
