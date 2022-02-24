@@ -44,7 +44,7 @@ export default function Profile(): JSX.Element {
         toast.warning("A senha deve ter mais de 6 caracteres.");
       } else if (!validator.isEmail(email)) {
         toast.warning("O e-mail não é válido.");
-      } else if (!validator.isAlpha(name, "pt-BR")) {
+      } else if (!validator.isAlpha(name, "pt-BR", { ignore: " " })) {
         toast.warning("O nome não é válido.");
       } else if (currentUser && currentUser.id) {
         // Fazendo o hash da senha
@@ -60,11 +60,11 @@ export default function Profile(): JSX.Element {
         });
         if (updateRes) {
           toast.success("Usuário atualizado com sucesso.");
-          const userExists = await db.user
-            .where({ email: currentUser.email })
-            .toArray();
+          const userExists = await db.user.where({ email }).toArray();
+          console.log(userExists);
           if (userExists.length) {
             // Atualizando o estado do usuário logado
+            localStorage.setItem("currentUser", email);
             setCurrentUser(userExists[0]);
           } else {
             toast.error("Erro ao atualizar usuário.");
