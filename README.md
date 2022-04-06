@@ -1,38 +1,32 @@
 # CryptoWallet
 
-CryptoWallet é um Web App que funciona como uma carteira virtual de Reais (R$), Bitcoins (BTC) e Britas (B$) (criptomoeda equivalente ao dólar). 
+CryptoWallet is a web app that works as a virtual wallet for your Reais (R$), Bitcoins (BTC) and Britas (B$) (cryptocurrency equivalent to USD). 
 
-No App, o usuário pode vender, comprar ou trocar suas cryptos e consultar um histórico de todas as operações financeiras realizadas, além de ter uma visão geral do seu patrimônio e dos valores atuais do BTC e B$. 
+The APIs used on this project to check the current prices of the currencies were [Mercado Bitcoin](https://www.mercadobitcoin.net/api/BTC/ticker/) and [Banco Central](https://dadosabertos.bcb.gov.br/dataset/taxas-de-cambio-todos-os-boletins-diarios).
 
-São utilizadas as APIs do [Mercado Bitcoin](https://www.mercadobitcoin.net/api/BTC/ticker/) e do [Banco Central](https://dadosabertos.bcb.gov.br/dataset/taxas-de-cambio-todos-os-boletins-diarios) para consultar as cotações atuais.
+## Install
 
-## Instalação
-
-Você pode utilizar essa aplicação baixando ou clonando esse repositório, depois disso, deve navegar até a pasta do projeto e executar um dos comandos abaixo, de acordo com seu gerenciador de pacotes preferido, para instalar as dependências.
-
-Com npm:
+With npm:
 ```
 npm install
 ```
 
-Com Yarn:
+With Yarn:
 ```
 yarn
 ```
 
-## Utilização
+## Usage
 
-Após a instalação dos pacotes, para rodar o App você deve executar um dos comandos abaixo, de acordo com seu gerenciador de pacotes preferido.
-
-Com npm:
+With npm:
 ```
 npm start
 ```
 
-Com Yarn:
+With Yarn:
 ```
 yarn start
 ```
 
-## Licença
+## License
 [MIT](https://choosealicense.com/licenses/mit/)
